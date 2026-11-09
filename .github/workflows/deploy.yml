@@ -1,0 +1,50 @@
+name: Auto Deploy ke Hosting
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ukk-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH (CodeIgniter 4)
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          APP_URL: ${{ secrets.APP_URL || 'https://ukk.ingintau.my.id' }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          envs: DEPLOY_PATH,APP_URL
+          command_timeout: 10m
+          script_stop: true
+          script: |
+            set -eu
+            APP_PATH="${DEPLOY_PATH:-}"
+            if [ -z "$APP_PATH" ]; then
+              APP_PATH=$(find "$HOME" -maxdepth 5 -type d -name .git 2>/dev/null \
+                | sed 's#/\.git$##' \
+                | while IFS= read -r d; do
+                    if git -C "$d" remote get-url origin 2>/dev/null | grep -q 'fikrudzulfahmi/ukk'; then
+                      printf '%s\n' "$d"
+                      break
+                    fi
+                  done)
+            fi
+            if [ -z "$APP_PATH" ] || [ ! -d "$APP_PATH/.git" ]; then
+              echo "GAGAL: folder repo ukk tidak ditemukan di hosting. Set secret DEPLOY_PATH."
+              exit 1
+            fi
+            cd "$APP_PATH"
+            git fetch --prune origin main
+            git checkout origin/main -- deploy-hosting.sh
+            DEPLOY_PATH="$APP_PATH" APP_URL="${APP_URL:-https://ukk.ingintau.my.id}" bash ./deploy-hosting.sh
