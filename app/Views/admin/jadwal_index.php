@@ -30,8 +30,8 @@ $bulan = [
 
 <style>
     .accordion-button:not(.collapsed) {
-        background-color: #f8f9fa;
-        color: #0d6efd;
+        background-color: #ecfdf5;
+        color: var(--uk-brand, #059669);
         box-shadow: none;
     }
 
@@ -43,16 +43,17 @@ $bulan = [
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
     }
 
-    /* Membuat tabel di dalam accordion terlihat seamless */
     .accordion-item {
-        border: 1px solid #eee !important;
+        border: 1px solid var(--uk-line, #e2e8f0) !important;
+        border-radius: 12px !important;
+        overflow: hidden;
     }
 </style>
 <div class="row g-4">
     <div class="col-lg-4">
         <div class="card border-0 shadow-sm mb-4" style="border-radius: 15px;">
             <div class="card-header bg-white py-3">
-                <h6 class="fw-bold mb-0 text-primary"><i class="bi bi-magic me-2"></i>Generate Jadwal Rolling</h6>
+                <h6 class="fw-bold mb-0 text-success"><i class="bi bi-magic me-2"></i>Generate Jadwal Rolling</h6>
             </div>
             <div class="card-body">
                 <form action="<?= base_url('jadwal/store') ?>" method="post">

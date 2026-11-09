@@ -36,12 +36,12 @@
                 </form>
             </div>
         </div>
-        <div class="card border-0 shadow-sm mt-3" style="border-radius: 15px; background: #ffffff;">
+        <div class="card border-0 shadow-sm mt-3" style="border-radius: 16px; background: #ffffff;">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center mb-3">
                     <div class="flex-shrink-0">
-                        <div class="bg-primary bg-opacity-10 p-2 rounded-3">
-                            <i class="bi bi-printer-fill text-primary fs-4"></i>
+                        <div class="bg-success-subtle p-2 rounded-3 text-success">
+                            <i class="bi bi-printer-fill fs-4"></i>
                         </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
@@ -50,8 +50,8 @@
                     </div>
                 </div>
 
-                <div class="alert alert-info border-0 pb-0" style="background: #e7f1ff; border-radius: 10px;">
-                    <p class="small text-primary">
+                <div class="alert alert-success border-0 pb-0" style="background: #ecfdf5; border-radius: 10px;">
+                    <p class="small text-success">
                         <i class="bi bi-info-circle-fill me-1"></i>
                         Sistem akan membuat file PDF dengan <strong>Auto Page Break</strong> (satu penguji satu halaman).
                     </p>

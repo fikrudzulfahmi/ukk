@@ -27,8 +27,8 @@
 
                             <?php if ($currentPos != $el['nama_pos']): ?>
                                 <tr class="table-light">
-                                    <td colspan="3" class="fw-bold text-primary ps-4">
-                                        <?= $el['nama_pos'] ?>
+                                    <td colspan="3" class="fw-bold text-success ps-4">
+                                        <i class="bi bi-folder2-open me-1"></i> <?= esc($el['nama_pos']) ?>
                                     </td>
                                 </tr>
                                 <?php $currentPos = $el['nama_pos']; ?>

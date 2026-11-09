@@ -78,7 +78,7 @@
                     </a>
                 </div>
             </form>
-            <div class="small text-muted">
+            <div class="small text-muted d-flex gap-1 align-items-center">
                 <span class="status-badge skor-25">BK: 25</span>
                 <span class="status-badge skor-70">CK: 70</span>
                 <span class="status-badge skor-85">K: 85</span>
@@ -91,25 +91,25 @@
         <div class="row">
             <?php foreach ($rekap_siswa as $siswa): ?>
                 <div class="col-12 mb-4">
-                    <div class="card shadow-sm border-0" style="border-radius: 12px; border-left: 6px solid <?= $siswa['butuh_remedi'] ? '#e53e3e' : '#38a169' ?> !important; overflow: hidden;">
+                    <div class="card shadow-sm border-0" style="border-radius: 16px; border-left: 6px solid <?= $siswa['butuh_remedi'] ? '#ef4444' : '#059669' ?> !important; overflow: hidden;">
 
                         <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                             <div>
-                                <h5 class="mb-0 fw-bold text-dark text-uppercase"><?= $siswa['nama_siswa'] ?></h5>
-                                <span class="badge bg-secondary border-0 mt-1"><?= $siswa['kelas'] ?></span>
+                                <h5 class="mb-0 fw-bold text-dark text-uppercase"><?= esc($siswa['nama_siswa']) ?></h5>
+                                <span class="badge bg-light text-dark border mt-1"><?= esc($siswa['kelas']) ?></span>
                             </div>
                             <div>
                                 <?php if ($siswa['butuh_remedi']): ?>
-                                    <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="bi bi-exclamation-triangle me-1"></i> Ada Remedial</span>
+                                    <span class="badge bg-danger text-white px-3 py-2 rounded-pill"><i class="bi bi-exclamation-triangle me-1"></i> Ada Remedial</span>
                                 <?php else: ?>
-                                    <span class="badge bg-success px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i> Aman / Kompeten</span>
+                                    <span class="badge bg-success text-white px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i> Aman / Kompeten</span>
                                 <?php endif; ?>
                             </div>
                         </div>
 
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
-                                <thead class="bg-light text-secondary small text-uppercase">
+                                <thead>
                                     <tr>
                                         <th class="px-4" style="width: 20%;">Pos Ujian</th>
                                         <th class="px-3" style="width: 45%;">Detail Nilai Elemen</th>
@@ -144,10 +144,10 @@
                                                             $class = 'skor-100';
                                                         }
                                                     ?>
-                                                        <div class="border rounded px-2 py-1 bg-white" style="font-size: 0.8rem;">
+                                                        <div class="border rounded px-2 py-1 bg-white shadow-xs" style="font-size: 0.8rem;">
                                                             <span class="status-badge <?= $class ?> me-1"><?= $label ?></span>
                                                             <span class="text-secondary" title="<?= htmlspecialchars($e['nama_elemen']) ?>">
-                                                                <strong><?= $e['kode'] ?>:</strong> <?= (strlen($e['nama_elemen']) > 30) ? substr($e['nama_elemen'], 0, 30) . '...' : esc($e['nama_elemen']) ?>
+                                                                <strong><?= esc($e['kode']) ?>:</strong> <?= (strlen($e['nama_elemen']) > 30) ? esc(substr($e['nama_elemen'], 0, 30)) . '...' : esc($e['nama_elemen']) ?>
                                                             </span>
                                                         </div>
                                                     <?php endforeach; ?>
@@ -155,16 +155,16 @@
                                             </td>
                                             <td class="px-3">
                                                 <?php if (!empty($pos['catatan'])): ?>
-                                                    <div class="small text-muted p-2 bg-light rounded border" style="font-size: 0.8rem; white-space: pre-wrap;"><?= esc($pos['catatan']) ?></div>
+                                                    <div class="small text-muted p-2 bg-light rounded border border-start-3 border-start-success" style="font-size: 0.8rem; white-space: pre-wrap;"><?= esc($pos['catatan']) ?></div>
                                                 <?php else: ?>
                                                     <span class="text-muted small fst-italic">-</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td class="px-4 text-center">
                                                 <?php if ($pos['status_remedi']): ?>
-                                                    <span class="badge bg-soft-danger w-100 py-2">Remedial</span>
+                                                    <span class="badge bg-danger-subtle text-danger border w-100 py-2 rounded-pill">Remedial</span>
                                                 <?php else: ?>
-                                                    <span class="badge bg-soft-success w-100 py-2">Kompeten</span>
+                                                    <span class="badge bg-success-subtle text-success border w-100 py-2 rounded-pill">Kompeten</span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
@@ -178,7 +178,7 @@
             <?php endforeach; ?>
         </div>
     <?php else: ?>
-        <div class="alert alert-warning text-center border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="alert alert-warning text-center border-0 shadow-sm" style="border-radius: 14px;">
             <i class="bi bi-calendar-x me-2"></i> Tidak ada data siswa yang ujian pada tanggal <strong><?= date('d-m-Y', strtotime($current_date)) ?></strong>.
         </div>
     <?php endif; ?>

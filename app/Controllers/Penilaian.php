@@ -551,44 +551,39 @@ class Penilaian extends BaseController
         $id_event = $activeEvent['id_event'];
         $is_teori = (int)$activeEvent['is_teori'];
 
-        // 2. Mulai query rekap data utama (Nilai Akhir)
-        $builder = $db->table('penjadwalan j');
+    // 2. Mulai query rekap data utama (Nilai Akhir)
+    // OPTIMASI: Ambil rekap langsung tanpa subquery lambat
+    $builder = $db->table('penjadwalan j');
 
-        // Setup Select secara dinamis
-        $select = 's.id_siswa, s.no_peserta, s.nama_siswa, s.nisn, s.kelas, AVG(np.is_kompeten) as rata_praktek';
-        if ($is_teori) {
-            $select .= ', nt.nilai_angka as nilai_teori';
-        } else {
-            $select .= ', 0 as nilai_teori'; // Nilai mutlak 0 jika teori non-aktif
-        }
+    $select = 's.id_siswa, s.no_peserta, s.nama_siswa, s.nisn, s.kelas, AVG(np.is_kompeten) as rata_praktek';
+    if ($is_teori) {
+        $select .= ', nt.nilai_angka as nilai_teori';
+    } else {
+        $select .= ', 0 as nilai_teori';
+    }
 
-        $builder->select($select);
-        $builder->join('siswa s', 's.id_siswa = j.id_siswa');
+    $builder->select($select);
+    $builder->join('siswa s', 's.id_siswa = j.id_siswa');
+    if ($is_teori) {
+        $builder->join('nilai_teori nt', 'nt.id_siswa = s.id_siswa AND nt.id_event = j.id_event', 'left');
+    }
+    $builder->join('nilai_praktek np', 'np.id_siswa = s.id_siswa AND np.id_event = j.id_event', 'left');
+    $builder->where('j.id_event', $id_event);
+    $builder->groupBy('s.id_siswa');
+    $builder->orderBy('s.kelas', 'ASC');
+    $builder->orderBy('s.nama_siswa', 'ASC');
 
-        // Join tabel nilai_teori HANYA jika is_teori sedang aktif
-        if ($is_teori) {
-            $builder->join('nilai_teori nt', 'nt.id_siswa = s.id_siswa AND nt.id_event = j.id_event', 'left');
-        }
+    $rekap = $builder->get()->getResultArray();
 
-        $builder->join('nilai_praktek np', 'np.id_siswa = s.id_siswa AND np.id_event = j.id_event', 'left');
-
-        $builder->where('j.id_event', $id_event);
-        $builder->groupBy('s.id_siswa');
-        $builder->orderBy('s.kelas', 'ASC');
-        $builder->orderBy('s.nama_siswa', 'ASC');
-
-        $rekap = $builder->get()->getResultArray();
-
-        // 3. QUERY TAMBAHAN: Ambil detail POS, Rata-rata nilai POS, dan Catatan per POS
-        $posSiswaRaw = $db->table('penjadwalan j')
-            ->select('j.id_siswa, p.id_pos, p.nama_pos, AVG(np.is_kompeten) as rata_pos, MIN(np.is_kompeten) as min_pos, cp.catatan')
-            ->join('pos_ukk p', 'p.id_pos = j.id_pos')
-            ->join('elemen_penilaian ep', 'ep.id_pos = p.id_pos', 'left')
-            ->join('nilai_praktek np', 'np.id_siswa = j.id_siswa AND np.id_elemen = ep.id_elemen AND np.id_event = j.id_event', 'left')
-            ->join('catatan_penilaian cp', 'cp.id_siswa = j.id_siswa AND cp.id_pos = p.id_pos AND cp.id_event = j.id_event', 'left')
-            ->where('j.id_event', $id_event)
-            ->groupBy('j.id_siswa, p.id_pos')
-            ->get()->getResultArray();
+    // 3. OPTIMASI: Ambil agregasi nilai per POS langsung dengan JOIN ringkas dan efisien
+    $posSiswaRaw = $db->table('penjadwalan j')
+        ->select('j.id_siswa, p.id_pos, p.nama_pos, AVG(np.is_kompeten) as rata_pos, MIN(np.is_kompeten) as min_pos, cp.catatan')
+        ->join('pos_ukk p', 'p.id_pos = j.id_pos')
+        ->join('nilai_praktek np', 'np.id_siswa = j.id_siswa AND np.id_pos = j.id_pos AND np.id_event = j.id_event', 'left')
+        ->join('catatan_penilaian cp', 'cp.id_siswa = j.id_siswa AND cp.id_pos = j.id_pos AND cp.id_event = j.id_event', 'left')
+        ->where('j.id_event', $id_event)
+        ->groupBy('j.id_siswa, p.id_pos, p.nama_pos, cp.catatan')
+        ->get()->getResultArray();
 
         // Grouping detail POS berdasarkan id_siswa agar mudah dipanggil di View
         $detail_pos = [];

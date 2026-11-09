@@ -34,7 +34,7 @@
                     <div class="accordion-item border mb-2 rounded overflow-hidden">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed py-3 text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#soal<?= $s['id_soal'] ?>">
-                                <span class="badge bg-primary me-3">#<?= $i + 1 ?></span>
+                                <span class="badge bg-success me-3">#<?= $i + 1 ?></span>
                                 <div class="text-truncate" style="max-width: 85%;">
                                     <?= strip_tags($s['pertanyaan']) ?>
                                 </div>
