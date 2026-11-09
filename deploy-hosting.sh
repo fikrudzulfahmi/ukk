@@ -89,8 +89,15 @@ fi
 if [ "$NEED_COMPOSER" = "1" ]; then
   COMPOSER_BIN=$(command -v composer || true)
   if [ -z "$COMPOSER_BIN" ]; then
-    echo "GAGAL: composer tidak ditemukan di hosting"
-    exit 1
+    if [ -f "composer.phar" ]; then
+      COMPOSER_BIN="$PWD/composer.phar"
+    else
+      say "Mengunduh composer.phar lokal..."
+      php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+      php composer-setup.php --install-dir=. --filename=composer.phar
+      php -r "unlink('composer-setup.php');"
+      COMPOSER_BIN="$PWD/composer.phar"
+    fi
   fi
   say "composer install --no-dev"
   "$PHP_BIN" "$COMPOSER_BIN" install \
