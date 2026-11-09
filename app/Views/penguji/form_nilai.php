@@ -2,35 +2,35 @@
 
 <?= $this->section('content') ?>
 <style>
-    body { background: var(--uk-canvas, #f5f6fa); }
+    body { background: var(--uk-canvas, #f8fafc); }
 
     .rate-head {
-        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem;
-        border-radius: 18px; padding: 1.1rem 1.35rem; color: #fff;
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem;
+        border-radius: 18px; padding: 1.15rem 1.4rem; color: #fff;
         background:
-            radial-gradient(120% 140% at 100% 0%, rgba(124, 58, 237, .55), transparent 55%),
-            linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4338ca 100%);
-        box-shadow: 0 20px 44px -30px rgba(30, 27, 75, .9);
+            radial-gradient(120% 140% at 100% 0%, rgba(16, 185, 129, .4), transparent 55%),
+            linear-gradient(135deg, #064e3b 0%, #065f46 55%, #059669 100%);
+        box-shadow: 0 16px 36px -20px rgba(5, 150, 105, 0.7);
     }
-    .rate-head__name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.06rem; font-weight: 700; letter-spacing: -.02em; margin: 0 0 .15rem; }
-    .rate-head__meta { font-size: .78rem; color: rgba(255,255,255,.7); display: flex; align-items: center; gap: .4rem; }
+    .rate-head__name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: -.02em; margin: 0 0 .15rem; }
+    .rate-head__meta { font-size: .8rem; color: rgba(255,255,255,.8); display: flex; align-items: center; gap: .45rem; }
 
-    .rate-card { border: 1px solid var(--uk-line); border-radius: 18px !important; box-shadow: var(--uk-shadow-sm) !important; }
-    .rate-card thead th { text-transform: uppercase; font-size: .7rem; letter-spacing: .06em; color: var(--uk-muted); background: #f8f9fd; border-bottom: 1px solid var(--uk-line); }
-    .rate-item { font-size: .9rem; color: var(--uk-ink); font-weight: 600; }
-    .rate-foot { background: linear-gradient(180deg, #fafaff, #f4f5fb); border-top: 1px solid var(--uk-line); }
+    .rate-card { border: 1px solid var(--uk-line); border-radius: 18px !important; box-shadow: var(--uk-shadow-sm) !important; background: #fff; }
+    .rate-card thead th { text-transform: uppercase; font-size: .72rem; letter-spacing: .06em; color: var(--uk-muted); background: #f8fafc; border-bottom: 1px solid var(--uk-line); }
+    .rate-item { font-size: .92rem; color: var(--uk-ink); font-weight: 600; }
+    .rate-foot { background: #f8fafc; border-top: 1px solid var(--uk-line); }
 
-    .btn-grade { background: linear-gradient(135deg, #059669, #10b981); border: none; border-radius: 13px; font-weight: 700; letter-spacing: .02em; color: #fff; box-shadow: 0 14px 30px -16px rgba(5,150,105,.9); }
+    .btn-grade { background: var(--uk-gradient); border: none; border-radius: 13px; font-weight: 700; letter-spacing: .02em; color: #fff; box-shadow: 0 12px 24px -10px rgba(5,150,105,.8); }
     .btn-grade:hover { background: linear-gradient(135deg, #047857, #059669); color: #fff; transform: translateY(-1px); }
 
-    .btn-check:checked + .btn-outline-danger { background: linear-gradient(135deg, #ef4444, #dc2626) !important; border-color: transparent; color: #fff; }
-    .btn-check:checked + .btn-outline-success { background: linear-gradient(135deg, #059669, #10b981) !important; border-color: transparent; color: #fff; }
+    .btn-check:checked + .btn-outline-danger { background: #ef4444 !important; border-color: #ef4444; color: #fff; }
+    .btn-check:checked + .btn-outline-success { background: #059669 !important; border-color: #059669; color: #fff; }
 </style>
 
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col-12">
-            <a href="<?= base_url('dashboard-penguji') ?>" class="btn btn-sm btn-light mb-3 px-3">
+            <a href="<?= base_url('dashboard-penguji') ?>" class="btn btn-sm btn-light border mb-3 px-3">
                 <i class="bi bi-arrow-left me-1"></i> Kembali ke Antrian
             </a>
 
@@ -42,7 +42,7 @@
                         <?php if (!empty($siswa['kelas'])): ?><span class="opacity-50">•</span><i class="bi bi-mortarboard"></i> <?= esc($siswa['kelas']) ?><?php endif; ?>
                     </div>
                 </div>
-                <span class="badge rounded-pill" style="background: rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.2);">
+                <span class="badge rounded-pill" style="background: rgba(255,255,255,.18); color:#fff; border:1px solid rgba(255,255,255,.25); padding: .45rem .85rem;">
                     <i class="bi bi-shield-check me-1"></i> Asesor
                 </span>
             </div>
@@ -53,7 +53,7 @@
         <?= csrf_field() ?>
         <input type="hidden" name="id_siswa" value="<?= $siswa['id_siswa'] ?>">
 
-        <div class="card rate-card border-0">
+        <div class="card rate-card border-0 mb-4">
             <div class="card-body p-0">
                 <table class="table align-middle mb-0">
                     <thead>

@@ -2,22 +2,22 @@
 
 <?= $this->section('content') ?>
 <style>
-    body { background: var(--uk-canvas, #f5f6fa); }
+    body { background: var(--uk-canvas, #f8fafc); }
 
     .dual-head {
-        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem;
-        border-radius: 18px; padding: 1.1rem 1.4rem; color: #fff;
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .85rem;
+        border-radius: 18px; padding: 1.15rem 1.4rem; color: #fff;
         background:
-            radial-gradient(120% 140% at 100% 0%, rgba(124, 58, 237, .55), transparent 55%),
-            linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4338ca 100%);
-        box-shadow: 0 20px 44px -30px rgba(30, 27, 75, .9);
+            radial-gradient(120% 140% at 100% 0%, rgba(16, 185, 129, .4), transparent 55%),
+            linear-gradient(135deg, #064e3b 0%, #065f46 55%, #059669 100%);
+        box-shadow: 0 16px 36px -20px rgba(5, 150, 105, 0.7);
         margin-bottom: 1.25rem;
     }
 
     .dual-head__title {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 700;
+        font-size: 1.15rem;
+        font-weight: 800;
         letter-spacing: -.02em;
         margin: 0;
     }
@@ -29,6 +29,7 @@
         font-weight: 600;
         padding: .4rem .9rem;
         border-radius: 999px;
+        font-size: .8rem;
     }
 
     .assessment-card {
@@ -36,10 +37,11 @@
         border: 1px solid var(--uk-line) !important;
         box-shadow: var(--uk-shadow-sm) !important;
         overflow: hidden;
+        background: #ffffff;
     }
 
     .table thead th {
-        background: #1e1b4b !important;
+        background: #064e3b !important;
         color: #fff;
         position: sticky;
         top: 0;
@@ -48,19 +50,20 @@
         font-size: .82rem;
         text-transform: uppercase;
         letter-spacing: .04em;
-        padding-top: .85rem;
-        padding-bottom: .85rem;
+        padding-top: .9rem;
+        padding-bottom: .9rem;
     }
 
     /* Segmented Control 4 Opsi */
     .rubrik-group {
         display: flex;
-        background: #eef2f6;
+        background: #f1f5f9;
         padding: 3px;
         border-radius: 10px;
         width: 100%;
         min-width: 250px;
-        gap: 2px;
+        gap: 3px;
+        border: 1px solid var(--uk-line);
     }
 
     .rubrik-group .btn-check+.btn {
@@ -68,74 +71,76 @@
         font-size: 11px;
         padding: 6px 3px;
         border: none;
-        border-radius: 8px;
+        border-radius: 7px;
         font-weight: 700;
-        color: #475569;
+        color: #64748b;
+        background: transparent;
         transition: all .15s ease;
+    }
+
+    .rubrik-group .btn-check+.btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
     }
 
     /* Warna khusus sesuai level */
     .btn-check:checked+.btn-bk {
-        background: #dc3545 !important;
+        background: #ef4444 !important;
         color: white !important;
+        box-shadow: 0 4px 10px -2px rgba(239, 68, 68, 0.4);
     }
 
     .btn-check:checked+.btn-ck {
-        background: #fd7e14 !important;
+        background: #f59e0b !important;
         color: white !important;
+        box-shadow: 0 4px 10px -2px rgba(245, 158, 11, 0.4);
     }
 
     .btn-check:checked+.btn-k {
-        background: #198754 !important;
+        background: #059669 !important;
         color: white !important;
+        box-shadow: 0 4px 10px -2px rgba(5, 150, 105, 0.4);
     }
 
     .btn-check:checked+.btn-sk {
-        background: #0d6efd !important;
+        background: #0284c7 !important;
         color: white !important;
+        box-shadow: 0 4px 10px -2px rgba(2, 132, 199, 0.4);
     }
 
     #save-status {
         position: fixed;
-        bottom: 20px;
+        bottom: 75px;
         right: 20px;
         z-index: 1050;
         display: none;
     }
 
     @media (max-width: 768px) {
-
-        /* Mengubah grup tombol menjadi vertikal */
         .rubrik-group {
             display: flex;
             flex-direction: column;
             width: 100%;
             min-width: 80px;
-            /* Ukuran lebar minimal tombol di HP */
         }
 
-        /* Menghilangkan radius sudut di tengah agar tampak menyatu */
         .rubrik-group .btn {
             border-radius: 0 !important;
             margin-bottom: -1px;
-            /* Menghilangkan double border */
             padding: 10px 5px;
-            /* Lebih tinggi agar mudah ditekan */
         }
 
-        /* Memberi radius hanya pada atas dan bawah saja */
         .rubrik-group .btn:first-child {
-            border-radius: 8px 8px 0 0 !important;
+            border-radius: 7px 7px 0 0 !important;
         }
 
         .rubrik-group .btn:last-child {
-            border-radius: 0 0 8px 8px !important;
+            border-radius: 0 0 7px 7px !important;
         }
 
-        /* Mengecilkan teks elemen agar tabel tidak terlalu lebar */
         td div.fw-bold {
             font-size: 11px !important;
-            line-height: 1.2;
+            line-height: 1.25;
         }
     }
 </style>
@@ -143,8 +148,8 @@
 <div class="container-fluid py-3">
     <div class="dual-head">
         <div>
-            <h3 class="dual-head__title"><i class="bi bi-ui-checks-grid me-2"></i> Input Nilai Praktek (Skala 4)</h3>
-            <small class="opacity-75">
+            <h3 class="dual-head__title"><i class="bi bi-ui-checks-grid me-2"></i> Input Nilai Praktik (Skala 4)</h3>
+            <small class="opacity-80">
                 <i class="bi bi-geo-alt"></i> <?= esc($pos['nama_pos']) ?>
                 <span class="mx-1">•</span>
                 <i class="bi bi-people"></i> Mode <?= count($siswa_list) ?> Peserta Serentak
@@ -152,28 +157,28 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <span class="dual-head__badge"><i class="bi bi-lightning-charge me-1"></i> Auto-Save Aktif</span>
-            <a href="<?= base_url('penilaian?date=' . $current_date) ?>" class="btn btn-sm btn-light rounded-pill px-3 fw-bold">
+            <a href="<?= base_url('penilaian?date=' . $current_date) ?>" class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-success">
                 <i class="bi bi-arrow-left me-1"></i> Kembali
             </a>
         </div>
     </div>
 
     <div id="save-status" class="alert alert-dark shadow-lg py-2 px-4 rounded-pill border-0">
-        <span class="spinner-border spinner-border-sm me-2 text-primary"></span>
-        <small class="fw-bold">Menyimpan...</small>
+        <span class="spinner-border spinner-border-sm me-2 text-success"></span>
+        <small class="fw-bold">Menyimpan nilai...</small>
     </div>
 
-    <div class="card assessment-card shadow-sm overflow-hidden">
+    <div class="card assessment-card shadow-sm overflow-hidden mb-4">
         <div class="table-responsive">
             <table class="table align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4" width="30%">Kriteria / Elemen</th>
+                        <th class="ps-4" width="30%">Kriteria / Elemen Penilaian</th>
                         <?php foreach ($siswa_list as $s): ?>
                             <th class="text-center">
-                                <div class="fw-bold"><?= $s['nama_siswa'] ?></div>
+                                <div class="fw-bold"><?= esc($s['nama_siswa']) ?></div>
                                 <div class="btn-group mt-1">
-                                    <button type="button" class="btn btn-xs btn-light border py-0 px-2 fill-all" data-siswa="<?= $s['id_siswa'] ?>" data-val="85" style="font-size: 10px;">Set All K (85)</button>
+                                    <button type="button" class="btn btn-xs btn-light text-success border py-0 px-2 fill-all" data-siswa="<?= $s['id_siswa'] ?>" data-val="85" style="font-size: 10px; font-weight: 600;">Set All K (85)</button>
                                 </div>
                             </th>
                         <?php endforeach; ?>
@@ -183,12 +188,11 @@
                     <?php foreach ($elemen as $e): ?>
                         <tr>
                             <td class="ps-4 py-3">
-                                <div class="fw-bold" style="font-size: 13px;"><?= $e['nama_elemen'] ?></div>
+                                <div class="fw-bold text-dark" style="font-size: 13px;"><?= esc($e['nama_elemen']) ?></div>
                             </td>
                             <?php foreach ($siswa_list as $siswa): ?>
                                 <td class="px-2">
                                     <?php
-                                    // Ambil nilai dari database
                                     $val = $existing[$siswa['id_siswa']][$e['id_elemen']] ?? null;
                                     ?>
                                     <div class="rubrik-group shadow-sm mx-auto">
@@ -233,10 +237,10 @@
 
                     <tr class="bg-light border-top border-2">
                         <td class="ps-4 py-4 align-top">
-                            <div class="fw-bold text-primary" style="font-size: 14px;">
+                            <div class="fw-bold text-success" style="font-size: 14px;">
                                 <i class="bi bi-journal-text me-1"></i> Catatan Penilaian
                             </div>
-                            <small class="text-muted" style="font-size: 11px;">Tambahkan catatan umum untuk performa siswa pada modul/POS ini (Opsional).</small>
+                            <small class="text-muted" style="font-size: 11px;">Tambahkan catatan performa siswa pada POS ini (Opsional).</small>
                         </td>
                         <?php foreach ($siswa_list as $siswa): ?>
                             <td class="px-2 py-3">
@@ -259,7 +263,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Fungsi pembantu untuk mengupdate tampilan visual radio button
         function updateVisual(inputElement) {
             let parent = $(inputElement).closest('.rubrik-group');
 
@@ -277,7 +280,6 @@
             if (label.hasClass('btn-sk')) label.addClass('btn-primary text-white').removeClass('btn-outline-light text-dark');
         }
 
-        // Event listener untuk menyimpan Nilai (Skor)
         $(document).on('change', '.btn-autosave', function() {
             updateVisual(this);
 
@@ -292,14 +294,13 @@
             $.post("<?= base_url('penilaian/simpan_single') ?>", data, function() {
                 setTimeout(() => {
                     $('#save-status').fadeOut();
-                }, 500);
+                }, 400);
             }).fail(function() {
                 alert('Gagal menyimpan data nilai!');
                 $('#save-status').hide();
             });
         });
 
-        // SKRIP BARU: Event listener untuk auto-save Catatan Umum saat user selesai mengetik (blur)
         $(document).on('blur', '.input-catatan', function() {
             const data = {
                 id_siswa: $(this).data('siswa'),
@@ -312,14 +313,13 @@
             $.post("<?= base_url('penilaian/simpan_catatan') ?>", data, function() {
                 setTimeout(() => {
                     $('#save-status').fadeOut();
-                }, 500);
+                }, 400);
             }).fail(function() {
                 alert('Gagal menyimpan catatan!');
                 $('#save-status').hide();
             });
         });
 
-        // Perbaikan untuk 'Set All' agar tidak lag (trigger change secukupnya)
         $('.fill-all').on('click', function() {
             const idSiswa = $(this).data('siswa');
             const val = $(this).data('val');

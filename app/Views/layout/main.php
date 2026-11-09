@@ -17,11 +17,11 @@
         :root {
             --sidebar-width: 268px;
             --sidebar-collapsed-width: 88px;
-            --sidebar-bg: #0d1220;
+            --sidebar-bg: #ffffff;
             --transition-speed: .28s;
         }
 
-        /* ---------------- SIDEBAR ---------------- */
+        /* ---------------- SIDEBAR (CLEAN WHITE AESTHETIC - OPSI A) ---------------- */
         .sidebar {
             position: fixed;
             top: 0;
@@ -31,10 +31,9 @@
             z-index: 1060;
             display: flex;
             flex-direction: column;
-            background:
-                radial-gradient(120% 60% at 0% 0%, rgba(99, 102, 241, .20) 0%, rgba(13, 18, 32, 0) 60%),
-                linear-gradient(180deg, #0d1220 0%, #101728 100%);
-            border-right: 1px solid rgba(255, 255, 255, .06);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--uk-line);
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.02);
             transition: width var(--transition-speed) cubic-bezier(.4, 0, .2, 1);
         }
 
@@ -42,14 +41,14 @@
             flex: 1 1 auto;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-bottom: 1rem;
+            padding-bottom: 1.5rem;
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, .14) transparent;
+            scrollbar-color: var(--uk-line-strong) transparent;
         }
 
-        .sidebar-scroll-area::-webkit-scrollbar { width: 5px; }
+        .sidebar-scroll-area::-webkit-scrollbar { width: 4px; }
         .sidebar-scroll-area::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-scroll-area::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .12); border-radius: 10px; }
+        .sidebar-scroll-area::-webkit-scrollbar-thumb { background: var(--uk-line-strong); border-radius: 10px; }
 
         /* branding */
         .sidebar-brand {
@@ -59,6 +58,7 @@
             padding: 1.35rem 1.25rem 1.1rem;
             white-space: nowrap;
             overflow: hidden;
+            border-bottom: 1px solid var(--uk-line);
         }
 
         .brand-mark {
@@ -68,10 +68,10 @@
             border-radius: 13px;
             display: grid;
             place-items: center;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            background: var(--uk-gradient);
             color: #fff;
             font-size: 1.15rem;
-            box-shadow: 0 10px 24px -12px rgba(99, 102, 241, .95);
+            box-shadow: 0 8px 18px -6px rgba(5, 150, 105, 0.6);
         }
 
         .brand-copy { line-height: 1.15; overflow: hidden; }
@@ -79,28 +79,28 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: .98rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--uk-ink);
             letter-spacing: -.02em;
             display: block;
         }
         .brand-copy .brand-sub {
             font-size: .69rem;
-            color: rgba(255, 255, 255, .42);
-            letter-spacing: .09em;
+            color: var(--uk-muted);
+            letter-spacing: .08em;
             text-transform: uppercase;
             font-weight: 600;
         }
 
         /* event card */
-        .event-card-wrapper { padding: 0 1rem .85rem; }
+        .event-card-wrapper { padding: 1.1rem 1rem .85rem; }
 
         .event-card {
             position: relative;
             overflow: hidden;
             border-radius: 14px;
-            padding: .8rem .9rem;
-            background: rgba(255, 255, 255, .045);
-            border: 1px solid rgba(255, 255, 255, .09);
+            padding: .85rem .95rem;
+            background: #f8fafc;
+            border: 1px solid var(--uk-line);
         }
 
         .event-card::before {
@@ -108,33 +108,33 @@
             position: absolute;
             inset: 0 auto 0 0;
             width: 3px;
-            background: linear-gradient(180deg, #6366f1, #a855f7);
+            background: var(--uk-brand);
         }
 
         .event-card .ec-label {
             display: flex;
             align-items: center;
             gap: .35rem;
-            font-size: .63rem;
+            font-size: .64rem;
             font-weight: 700;
-            letter-spacing: .12em;
+            letter-spacing: .1em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, .45);
+            color: var(--uk-brand);
             margin-bottom: .35rem;
         }
 
         .event-card .ec-label .uk-dot {
             width: 6px;
             height: 6px;
-            background: #34d399;
-            box-shadow: 0 0 0 3px rgba(52, 211, 153, .18);
+            background: var(--uk-brand);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.16);
         }
 
         .event-card .ec-name {
-            font-size: .8rem;
+            font-size: .82rem;
             font-weight: 600;
-            color: #e6e9f5;
-            line-height: 1.3;
+            color: var(--uk-ink);
+            line-height: 1.35;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -145,7 +145,7 @@
         .event-card .ec-year {
             font-size: .72rem;
             font-weight: 600;
-            color: #a5b4fc;
+            color: var(--uk-muted);
         }
 
         /* nav */
@@ -155,11 +155,11 @@
             display: flex;
             align-items: center;
             gap: .7rem;
-            padding: .62rem .75rem;
-            margin: .12rem 0;
+            padding: .62rem .8rem;
+            margin: .15rem 0;
             border-radius: 11px;
-            color: rgba(255, 255, 255, .62);
-            font-size: .855rem;
+            color: var(--uk-ink-2);
+            font-size: .865rem;
             font-weight: 550;
             white-space: nowrap;
             position: relative;
@@ -167,63 +167,58 @@
         }
 
         .sidebar .nav-link i {
-            font-size: 1.02rem;
-            min-width: 20px;
+            font-size: 1.05rem;
+            min-width: 22px;
             text-align: center;
-            opacity: .9;
-            transition: transform .18s ease;
+            color: var(--uk-muted);
+            transition: color .18s ease, transform .18s ease;
         }
 
         .sidebar .nav-link:hover {
-            background: rgba(255, 255, 255, .06);
-            color: #fff;
+            background: #f1f5f9;
+            color: var(--uk-ink);
         }
 
-        .sidebar .nav-link:hover i { transform: translateX(1px); }
+        .sidebar .nav-link:hover i {
+            color: var(--uk-brand);
+            transform: translateX(1px);
+        }
 
         .sidebar .nav-link.active {
-            background: linear-gradient(90deg, rgba(99, 102, 241, .26) 0%, rgba(99, 102, 241, .10) 100%);
-            color: #fff !important;
-            box-shadow: inset 0 0 0 1px rgba(129, 140, 248, .22);
+            background: var(--uk-brand-soft);
+            color: var(--uk-brand) !important;
+            font-weight: 700;
+            border: 1px solid var(--uk-brand-soft-border);
         }
 
-        .sidebar .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: -.65rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 60%;
-            border-radius: 0 3px 3px 0;
-            background: linear-gradient(180deg, #818cf8, #c084fc);
+        .sidebar .nav-link.active i {
+            color: var(--uk-brand) !important;
         }
-
-        .sidebar .nav-link.active i { color: #c7d2fe; }
 
         .section-label {
-            padding: 1.05rem .95rem .35rem;
+            padding: 1.1rem .95rem .35rem;
             font-size: .63rem;
             font-weight: 700;
-            letter-spacing: .13em;
+            letter-spacing: .12em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, .3);
+            color: var(--uk-faint);
             white-space: nowrap;
         }
 
         /* footer */
         .sidebar-footer {
-            border-top: 1px solid rgba(255, 255, 255, .07);
+            border-top: 1px solid var(--uk-line);
             padding: .75rem .65rem 1rem;
+            background: #ffffff;
         }
 
         .sidebar-footer .nav-link {
-            color: rgba(248, 113, 113, .85);
+            color: var(--uk-danger);
         }
 
         .sidebar-footer .nav-link:hover {
-            background: rgba(239, 68, 68, .12);
-            color: #fca5a5;
+            background: var(--uk-danger-soft);
+            color: var(--uk-danger);
         }
 
         /* collapse */
@@ -235,7 +230,6 @@
         .sidebar.collapsed .sidebar-brand { padding: 1.35rem 0 1.1rem; justify-content: center; }
         .sidebar.collapsed .nav-link { justify-content: center; padding: .68rem 0; }
         .sidebar.collapsed .nav-link i { min-width: 0; }
-        .sidebar.collapsed .nav-link.active::before { left: -.65rem; }
 
         /* floating toggle */
         .btn-float-toggle {
@@ -253,11 +247,11 @@
             cursor: pointer;
             z-index: 1100;
             font-size: .7rem;
-            box-shadow: 0 6px 16px -8px rgba(16, 24, 40, .45);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
             transition: transform .2s ease, background-color .2s ease;
         }
 
-        .btn-float-toggle:hover { background: #f5f6ff; transform: scale(1.06); }
+        .btn-float-toggle:hover { background: #f0fdf4; transform: scale(1.06); }
 
         /* ---------------- CONTENT ---------------- */
         .content-wrapper {
@@ -281,7 +275,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 1.75rem;
-            background: rgba(255, 255, 255, .86);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: saturate(180%) blur(12px);
             -webkit-backdrop-filter: saturate(180%) blur(12px);
             border-bottom: 1px solid var(--uk-line);
@@ -298,7 +292,7 @@
 
         .topbar-greet .tb-label {
             font-size: .74rem;
-            color: var(--uk-faint);
+            color: var(--uk-muted);
             font-weight: 500;
         }
 
@@ -317,13 +311,11 @@
             border-radius: 999px;
             background: #fff;
             border: 1px solid var(--uk-line);
-            box-shadow: var(--uk-shadow-sm);
+            box-shadow: var(--uk-shadow-xs);
             font-size: .77rem;
             font-weight: 600;
             color: var(--uk-ink-2);
         }
-
-        .tb-chip .uk-dot { box-shadow: 0 0 0 3px rgba(16, 185, 129, .16); }
 
         /* main */
         .content-main { padding: 1.9rem 1.75rem 2.75rem; flex: 1 1 auto; }
@@ -341,6 +333,7 @@
 
 <body>
     <div class="d-flex">
+        <!-- Sidebar Desktop -->
         <nav class="sidebar" id="sidebar">
             <button id="toggle-sidebar" class="btn-float-toggle" aria-label="Ciutkan menu">
                 <i class="bi bi-chevron-left" id="toggle-icon"></i>
@@ -438,6 +431,7 @@
             </div>
         </nav>
 
+        <!-- Main Wrapper -->
         <div class="content-wrapper">
             <header class="topbar">
                 <div class="d-flex align-items-center gap-3">
@@ -458,7 +452,7 @@
                     <span class="tb-chip">
                         <span class="uk-dot"></span>
                         <span class="badge-role-text text-muted fw-normal">Role</span>
-                        <span class="text-primary"><?= strtoupper(session()->get('role') ?? '-') ?></span>
+                        <span class="text-primary fw-bold"><?= strtoupper(session()->get('role') ?? '-') ?></span>
                     </span>
                 </div>
             </header>
@@ -481,6 +475,44 @@
             </main>
         </div>
     </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="uk-bottom-bar">
+        <ul class="uk-bottom-bar-nav">
+            <li class="uk-bottom-bar-item">
+                <a href="<?= base_url('dashboard') ?>" class="uk-bottom-link <?= (url_is('dashboard*') ? 'active' : '') ?>">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Beranda</span>
+                </a>
+            </li>
+            <?php if (session()->get('role') == 'admin'): ?>
+                <li class="uk-bottom-bar-item">
+                    <a href="<?= base_url('siswa') ?>" class="uk-bottom-link <?= (url_is('siswa*') ? 'active' : '') ?>">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Siswa</span>
+                    </a>
+                </li>
+                <li class="uk-bottom-bar-item">
+                    <a href="<?= base_url('jadwal') ?>" class="uk-bottom-link <?= (url_is('jadwal*') ? 'active' : '') ?>">
+                        <i class="bi bi-calendar-week-fill"></i>
+                        <span>Jadwal</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <li class="uk-bottom-bar-item">
+                <a href="<?= base_url('monitoring/matriks') ?>" class="uk-bottom-link <?= (url_is('monitoring*') ? 'active' : '') ?>">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Matriks</span>
+                </a>
+            </li>
+            <li class="uk-bottom-bar-item">
+                <a href="javascript:void(0)" onclick="logoutConfirm()" class="uk-bottom-link text-danger">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Keluar</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -538,7 +570,7 @@
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#667085',
+                cancelButtonColor: '#64748b',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
                 reverseButtons: true
@@ -557,8 +589,8 @@
                 text: "Anda harus login kembali untuk mengakses data.",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#4f46e5',
-                cancelButtonColor: '#667085',
+                confirmButtonColor: '#059669',
+                cancelButtonColor: '#64748b',
                 confirmButtonText: 'Ya, Keluar!',
                 cancelButtonText: 'Batal',
                 reverseButtons: true

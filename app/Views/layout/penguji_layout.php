@@ -18,37 +18,38 @@
             position: sticky;
             top: 0;
             z-index: 1030;
-            background: linear-gradient(100deg, #101829 0%, #171f36 60%, #1e2745 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-            box-shadow: 0 12px 30px -24px rgba(0, 0, 0, .9);
+            background: #ffffff;
+            border-bottom: 1px solid var(--uk-line);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
         }
 
         .pg-bar__inner {
-            max-width: 1180px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: .8rem 1.15rem;
+            padding: .85rem 1.15rem;
             display: flex;
             align-items: center;
             gap: .9rem;
         }
 
         .pg-mark {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
             display: grid;
             place-items: center;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
+            background: var(--uk-gradient);
             color: #fff;
-            font-size: 1.05rem;
+            font-size: 1.15rem;
             flex: 0 0 auto;
+            box-shadow: 0 6px 16px -4px rgba(5, 150, 105, 0.45);
         }
 
         .pg-title {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: .95rem;
+            font-size: 1rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--uk-ink);
             line-height: 1.15;
             display: block;
             letter-spacing: -.02em;
@@ -56,9 +57,9 @@
 
         .pg-sub {
             font-size: .68rem;
-            letter-spacing: .09em;
+            letter-spacing: .08em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, .45);
+            color: var(--uk-muted);
             font-weight: 600;
         }
 
@@ -66,12 +67,12 @@
             display: inline-flex;
             align-items: center;
             gap: .55rem;
-            padding: .38rem .8rem .38rem .4rem;
+            padding: .38rem .85rem .38rem .45rem;
             border-radius: 999px;
-            background: rgba(255, 255, 255, .07);
-            border: 1px solid rgba(255, 255, 255, .1);
-            color: #fff;
-            font-size: .8rem;
+            background: #f8fafc;
+            border: 1px solid var(--uk-line);
+            color: var(--uk-ink);
+            font-size: .82rem;
             font-weight: 600;
         }
 
@@ -81,9 +82,10 @@
             border-radius: 50%;
             display: grid;
             place-items: center;
-            background: rgba(255, 255, 255, .16);
-            font-size: .72rem;
-            font-weight: 700;
+            background: var(--uk-brand-soft);
+            color: var(--uk-brand);
+            font-size: .75rem;
+            font-weight: 800;
             text-transform: uppercase;
         }
 
@@ -91,29 +93,33 @@
             display: inline-flex;
             align-items: center;
             gap: .4rem;
-            padding: .42rem .78rem;
+            padding: .42rem .85rem;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, .16);
-            color: rgba(255, 255, 255, .82);
-            font-size: .8rem;
+            border: 1px solid var(--uk-line);
+            background: #fff;
+            color: var(--uk-ink-2);
+            font-size: .82rem;
             font-weight: 600;
             transition: .18s ease;
         }
 
-        .pg-out:hover { background: rgba(239, 68, 68, .16); border-color: rgba(248, 113, 113, .4); color: #fecaca; }
+        .pg-out:hover { background: var(--uk-danger-soft); border-color: #fca5a5; color: var(--uk-danger); }
 
-        .pg-main { padding: 1.6rem 0 3rem; }
+        .pg-main {
+            padding: 1.6rem 0 5rem;
+            max-width: 1200px;
+        }
     </style>
 </head>
 
 <body>
 
-    <nav class="pg-bar">
+    <header class="pg-bar">
         <div class="pg-bar__inner">
-            <span class="pg-mark"><i class="bi bi-clipboard2-check"></i></span>
+            <span class="pg-mark"><i class="bi bi-clipboard2-check-fill"></i></span>
             <div class="me-auto">
-                <span class="pg-title">Penilaian UKK</span>
-                <span class="pg-sub">SMK Islam 1 Blitar</span>
+                <span class="pg-title">Penilaian Penguji</span>
+                <span class="pg-sub">E-UKK TSM SMK Islam 1 Blitar</span>
             </div>
 
             <span class="pg-user d-none d-sm-inline-flex">
@@ -121,17 +127,67 @@
                 <?= esc(session()->get('nama_lengkap') ?? 'Penguji') ?>
             </span>
 
-            <a href="<?= base_url('logout') ?>" class="pg-out">
+            <a href="javascript:void(0)" onclick="logoutConfirm()" class="pg-out">
                 <i class="bi bi-box-arrow-right"></i> <span class="d-none d-sm-inline">Keluar</span>
             </a>
         </div>
+    </header>
+
+    <main class="container pg-main">
+        <?= $this->renderSection('content') ?>
+    </main>
+
+    <!-- Mobile Bottom Navigation Bar Penguji -->
+    <nav class="uk-bottom-bar">
+        <ul class="uk-bottom-bar-nav">
+            <li class="uk-bottom-bar-item">
+                <a href="<?= base_url('penilaian') ?>" class="uk-bottom-link <?= (url_is('penilaian*') && !url_is('penilaian/riwayat*') ? 'active' : '') ?>">
+                    <i class="bi bi-pencil-square"></i>
+                    <span>Input Nilai</span>
+                </a>
+            </li>
+            <li class="uk-bottom-bar-item">
+                <a href="<?= base_url('penilaian/riwayat') ?>" class="uk-bottom-link <?= (url_is('penilaian/riwayat*') ? 'active' : '') ?>">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Riwayat</span>
+                </a>
+            </li>
+            <li class="uk-bottom-bar-item">
+                <a href="<?= base_url('monitoring/matriks') ?>" class="uk-bottom-link <?= (url_is('monitoring*') ? 'active' : '') ?>">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Matriks</span>
+                </a>
+            </li>
+            <li class="uk-bottom-bar-item">
+                <a href="javascript:void(0)" onclick="logoutConfirm()" class="uk-bottom-link text-danger">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Keluar</span>
+                </a>
+            </li>
+        </ul>
     </nav>
 
-    <div class="container pg-main">
-        <?= $this->renderSection('content') ?>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function logoutConfirm() {
+            Swal.fire({
+                title: 'Ingin Keluar?',
+                text: "Sesi penilaian Anda akan berakhir.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#059669',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Keluar!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "<?= base_url('logout') ?>";
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>
