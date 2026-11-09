@@ -35,6 +35,9 @@ $routes->group('siswa', ['filter' => 'auth'], function ($routes) {
 $routes->group('elemen', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'Elemen::index');
     $routes->post('store', 'Elemen::store');
+    $routes->post('import', 'Elemen::import');
+    $routes->post('clone', 'Elemen::clone');
+    $routes->get('template', 'Elemen::template');
     $routes->post('update/(:num)', 'Elemen::update/$1');
     $routes->get('delete/(:num)', 'Elemen::delete/$1');
 });
@@ -81,6 +84,7 @@ $routes->group('soalteori', ['filter' => 'auth'], function ($routes) {
     $routes->post('simpan', 'SoalTeori::simpan');
     $routes->get('hapus/(:num)', 'SoalTeori::hapus/$1');
     $routes->post('import', 'SoalTeori::import');
+    $routes->post('clone', 'SoalTeori::clone');
     $routes->get('template_soal_ukk.xlsx', 'SoalTeori::downloadTemplate');
     $routes->get('buka_kunci/(:num)', 'SoalTeori::buka_kunci/$1');
     $routes->get('cetak', 'SoalTeori::cetak');

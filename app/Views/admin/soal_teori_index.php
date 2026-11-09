@@ -8,10 +8,13 @@
                 <h5 class="fw-bold mb-0">Manajemen Soal Teori</h5>
                 <small class="text-muted">Kelola bank soal untuk sistem ujian scan QR</small>
             </div>
-            <div>
+            <div class="d-flex flex-wrap gap-2">
                 <a href="<?= base_url('soalteori/cetak') ?>" class="btn btn-danger btn-sm shadow-sm" target="_blank">
                     <i class="bi bi-file-pdf"></i> Cetak Soal
                 </a>
+                <button class="btn btn-outline-success btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#modalClone">
+                    <i class="bi bi-files"></i> Clone Tahun Lalu
+                </button>
                 <button class="btn btn-success btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#modalImport">
                     <i class="bi bi-file-earmark-excel"></i> Import
                 </button>
@@ -27,7 +30,7 @@
             <?php if (empty($soal)): ?>
                 <div class="text-center py-5">
                     <i class="bi bi-journal-x display-1 text-light"></i>
-                    <p class="text-muted mt-3">Belum ada soal. Silakan tambah manual atau import excel.</p>
+                    <p class="text-muted mt-3">Belum ada soal. Silakan tambah manual, import excel, atau clone dari tahun sebelumnya.</p>
                 </div>
             <?php else: ?>
                 <?php foreach ($soal as $i => $s): ?>
@@ -169,5 +172,84 @@
         </form>
     </div>
 </div>
+
+<div class="modal fade" id="modalClone" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog border-0">
+        <form action="<?= base_url('soalteori/clone') ?>" method="POST" class="modal-content border-0 shadow" id="formCloneSoal">
+            <?= csrf_field() ?>
+            <div class="modal-header border-0" style="background:#ecfdf5;">
+                <h6 class="modal-title fw-bold text-success">
+                    <i class="bi bi-files me-2"></i>Clone Soal dari Tahun Sebelumnya
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="small text-muted">
+                    Seluruh soal dari event yang dipilih akan disalin ke event aktif
+                    (<strong><?= esc(session()->get('nama_event') ?? '-') ?></strong>).
+                    Soal dengan pertanyaan yang sama tidak akan diduplikasi.
+                </p>
+
+                <?php if (empty($events)): ?>
+                    <div class="alert alert-warning border-0 small mb-0">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Belum ada event lain. Buat event baru terlebih dahulu di menu Event.
+                    </div>
+                <?php else: ?>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Pilih Event Sumber</label>
+                        <select name="id_event_sumber" class="form-select" required>
+                            <option value="">-- Pilih Event --</option>
+                            <?php foreach ($events as $ev): ?>
+                                <option value="<?= $ev['id_event'] ?>">
+                                    <?= esc($ev['nama_event']) ?><?= !empty($ev['tahun_pelajaran']) ? ' — ' . esc($ev['tahun_pelajaran']) : '' ?>
+                                    (<?= (int) ($event_counts[$ev['id_event']] ?? 0) ?> soal)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="alert alert-light border small mb-0">
+                        <i class="bi bi-info-circle me-1 text-success"></i>
+                        Kunci jawaban ikut tersalin. Soal lama di event sumber tetap utuh.
+                    </div>
+                <?php endif; ?>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-success btn-sm px-4" <?= empty($events) ? 'disabled' : '' ?>>
+                    <i class="bi bi-files me-1"></i>Clone Sekarang
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const formCloneSoal = document.getElementById('formCloneSoal');
+    if (formCloneSoal) {
+        formCloneSoal.addEventListener('submit', function(e) {
+            const select = this.querySelector('select[name="id_event_sumber"]');
+            if (!select || !select.value) return;
+
+            e.preventDefault();
+            const eventName = select.options[select.selectedIndex].text.trim();
+
+            Swal.fire({
+                title: 'Clone bank soal?',
+                html: `Seluruh soal dari <strong>${eventName}</strong> akan disalin ke event aktif.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#059669',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Clone',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+    }
+</script>
 
 <?= $this->endSection() ?>

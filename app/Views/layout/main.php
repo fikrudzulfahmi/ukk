@@ -562,6 +562,49 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <?php
+    $flashSuccess = session()->getFlashdata('success');
+    $flashError   = session()->getFlashdata('error');
+    $flashErrors  = session()->getFlashdata('errors');
+    ?>
+    <?php if ($flashSuccess || $flashError || $flashErrors): ?>
+        <script>
+            (function() {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: <?= $flashError ? 6000 : 4000 ?>,
+                    timerProgressBar: true
+                });
+
+                <?php if ($flashSuccess): ?>
+                    Toast.fire({
+                        icon: 'success',
+                        title: <?= json_encode((string) $flashSuccess, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?>
+                    });
+                <?php endif; ?>
+
+                <?php if ($flashError): ?>
+                    Toast.fire({
+                        icon: 'error',
+                        title: <?= json_encode((string) $flashError, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?>
+                    });
+                <?php endif; ?>
+
+                <?php if ($flashErrors): ?>
+                    const errList = <?= json_encode(array_values((array) $flashErrors), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?>;
+                    if (errList.length) {
+                        Toast.fire({
+                            icon: 'warning',
+                            title: errList.join(' ')
+                        });
+                    }
+                <?php endif; ?>
+            })();
+        </script>
+    <?php endif; ?>
+
     <script>
         function confirmDelete(url) {
             Swal.fire({

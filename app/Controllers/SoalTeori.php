@@ -19,15 +19,119 @@ class SoalTeori extends BaseController
     {
         $id_event = session()->get('active_event_id');
 
+        $db = \Config\Database::connect();
+
+        // Event lain untuk pilihan clone soal
+        $events = $db->table('events')
+            ->select('id_event, nama_event, tahun_pelajaran')
+            ->where('id_event !=', $id_event ?? 0)
+            ->orderBy('id_event', 'DESC')
+            ->get()->getResultArray();
+
+        // Jumlah soal per event, untuk info di modal clone
+        $countRows = $db->table('soal_teori')
+            ->select('id_event, COUNT(*) AS total')
+            ->groupBy('id_event')
+            ->get()->getResultArray();
+
+        $eventCounts = [];
+        foreach ($countRows as $row) {
+            $eventCounts[$row['id_event']] = (int) $row['total'];
+        }
+
         $data = [
-            'title' => 'Manajemen Soal Teori',
+            'title'        => 'Manajemen Soal Teori',
             // Pastikan kolom id_event ada di tabel soal_teori
-            'soal'  => $this->soalModel->where('id_event', $id_event)->findAll()
+            'soal'         => $this->soalModel->where('id_event', $id_event)->findAll(),
+            'events'       => $events,
+            'event_counts' => $eventCounts,
         ];
 
         // Path view disesuaikan ke folder admin
         return view('admin/soal_teori_index', $data);
     }
+
+    /**
+     * Salin (clone) seluruh bank soal dari event/tahun sebelumnya.
+     */
+    public function clone()
+    {
+        $id_event = (int) session()->get('active_event_id');
+        if (!$id_event) {
+            return redirect()->to('/event')->with('error', 'Silakan aktifkan salah satu Event terlebih dahulu!');
+        }
+
+        $id_sumber = (int) $this->request->getPost('id_event_sumber');
+        if (!$id_sumber) {
+            return redirect()->back()->with('error', 'Pilih event sumber terlebih dahulu.');
+        }
+        if ($id_sumber === $id_event) {
+            return redirect()->back()->with('error', 'Event sumber tidak boleh sama dengan event aktif.');
+        }
+
+        $db = \Config\Database::connect();
+
+        $sumber = $db->table('events')->where('id_event', $id_sumber)->get()->getRowArray();
+        if (!$sumber) {
+            return redirect()->back()->with('error', 'Event sumber tidak ditemukan.');
+        }
+
+        $soalSumber = $db->table('soal_teori')->where('id_event', $id_sumber)->orderBy('id_soal', 'ASC')->get()->getResultArray();
+        if (empty($soalSumber)) {
+            return redirect()->back()->with('error', 'Event "' . esc($sumber['nama_event']) . '" belum memiliki soal untuk disalin.');
+        }
+
+        // Kunci duplikat berdasarkan teks pertanyaan (dinormalisasi)
+        $existing = [];
+        foreach ($db->table('soal_teori')->select('pertanyaan')->where('id_event', $id_event)->get()->getResultArray() as $s) {
+            $existing[$this->normalize($s['pertanyaan'])] = true;
+        }
+
+        $baru = 0;
+        $duplikat = 0;
+
+        $db->transBegin();
+        try {
+            foreach ($soalSumber as $s) {
+                $key = $this->normalize($s['pertanyaan']);
+                if (isset($existing[$key])) {
+                    $duplikat++;
+                    continue;
+                }
+
+                $db->table('soal_teori')->insert([
+                    'id_event'      => $id_event,
+                    'pertanyaan'    => $s['pertanyaan'],
+                    'opsi_a'        => $s['opsi_a'],
+                    'opsi_b'        => $s['opsi_b'],
+                    'opsi_c'        => $s['opsi_c'],
+                    'opsi_d'        => $s['opsi_d'],
+                    'jawaban_benar' => $s['jawaban_benar'],
+                ]);
+
+                $existing[$key] = true;
+                $baru++;
+            }
+
+            $db->transCommit();
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->with('error', 'Clone gagal: ' . $e->getMessage());
+        }
+
+        $pesan = "{$baru} soal disalin dari \"" . esc($sumber['nama_event']) . '"';
+        if ($duplikat > 0) {
+            $pesan .= ", {$duplikat} soal dilewati karena sudah ada";
+        }
+
+        return redirect()->to(base_url('soalteori'))->with('success', $pesan . '.');
+    }
+
+    private function normalize(string $teks): string
+    {
+        return mb_strtolower(trim(preg_replace('/\s+/u', ' ', strip_tags($teks))));
+    }
+
 
     public function simpan()
     {
