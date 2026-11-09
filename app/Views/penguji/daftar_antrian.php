@@ -3,42 +3,43 @@
 <?= $this->section('content') ?>
 <style>
     body {
-        background: #f8f9fa;
+        background: var(--uk-canvas, #f5f6fa);
     }
 
     .queue-card {
-        border-radius: 16px;
-        border: none;
+        border-radius: 18px;
+        border: 1px solid var(--uk-line, #e8ecf3);
         overflow: hidden;
     }
 
     .filter-card {
-        border-radius: 12px;
-        border: 1px solid #eaeaea;
+        border-radius: 14px;
+        border: 1px solid var(--uk-line, #e8ecf3);
     }
 
     .table thead th {
         text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.05em;
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
         font-weight: 700;
-        padding: 1.25rem;
-        background-color: #fcfcfc;
-        border-bottom: 2px solid #f0f0f0;
+        padding: 1rem;
+        background-color: #f8f9fd;
+        border-bottom: 1px solid var(--uk-line, #e8ecf3);
     }
 
     .initial-circle {
         width: 35px;
         height: 35px;
-        background: #e9ecef;
-        color: #0d6efd;
+        background: linear-gradient(135deg, var(--uk-brand-soft, #eeefff), #e9ecff);
+        color: var(--uk-brand, #4f46e5);
         border-radius: 50%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
+        font-weight: 700;
+        font-size: .8rem;
         border: 2px solid #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 6px rgba(16, 24, 40, .1);
     }
 
     .student-item {

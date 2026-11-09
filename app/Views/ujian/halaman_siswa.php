@@ -133,16 +133,151 @@
             }
         }
     </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('assets/css/ukk.css') ?>">
+
+    <style>
+        body { background-color: var(--uk-canvas); }
+
+        .exam-head {
+            position: relative;
+            overflow: hidden;
+            border-radius: 18px;
+            padding: 1.15rem 1.35rem;
+            color: #fff;
+            background:
+                radial-gradient(120% 120% at 100% 0%, rgba(168, 85, 247, .55), transparent 55%),
+                linear-gradient(135deg, #1a2040 0%, #312a63 100%);
+            box-shadow: 0 20px 44px -28px rgba(26, 32, 64, .9);
+        }
+
+        .exam-head__name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            margin: 0 0 .15rem;
+        }
+
+        .exam-head__meta {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .68);
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+        }
+
+        .exam-head__badge {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: .3rem .6rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .18);
+        }
+
+        .soal-card {
+            border: 1px solid var(--uk-line);
+            border-radius: 18px !important;
+            box-shadow: var(--uk-shadow-sm) !important;
+        }
+
+        .soal-card .badge {
+            background: var(--uk-brand-soft) !important;
+            color: var(--uk-brand) !important;
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            padding: .4rem .7rem;
+            border-radius: 8px;
+        }
+
+        .soal-card p.fw-semibold {
+            font-size: .96rem;
+            line-height: 1.65;
+            color: var(--uk-ink) !important;
+        }
+
+        .option-btn {
+            border: 1px solid var(--uk-line-strong);
+            background: #fff;
+            border-radius: 12px !important;
+            font-size: .9rem;
+            color: var(--uk-ink-2);
+            transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease;
+        }
+
+        .option-btn:hover { border-color: rgba(79, 70, 229, .45); background: #fafaff; }
+
+        .btn-check:checked + .option-btn {
+            border-color: var(--uk-brand);
+            background: var(--uk-brand-soft);
+            color: var(--uk-brand-600);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, .10);
+        }
+
+        .floating-nav {
+            border: 1px solid var(--uk-line);
+            border-radius: 16px;
+            box-shadow: var(--uk-shadow);
+        }
+
+        .floating-nav h6 {
+            font-size: .82rem;
+            font-weight: 700;
+            letter-spacing: -.01em;
+            border-color: var(--uk-line) !important;
+        }
+
+        .nav-box {
+            border: 1px solid var(--uk-line-strong);
+            border-radius: 10px;
+            color: var(--uk-muted);
+            font-weight: 600;
+            font-size: .85rem;
+        }
+
+        .nav-box:hover { border-color: rgba(79, 70, 229, .5); color: var(--uk-brand); }
+
+        .nav-box.answered {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .btn-finish {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            letter-spacing: .02em;
+            box-shadow: 0 14px 30px -16px rgba(239, 68, 68, .95);
+        }
+
+        .btn-finish:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); color: #fff; }
+
+        @media (max-width: 992px) {
+            .floating-nav { border-radius: 16px 16px 0 0; border-bottom: none; }
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="container py-4">
-        <div class="card border-0 shadow-sm mb-4 bg-primary text-white">
-            <div class="card-body">
-                <h6 class="mb-1"><?= $siswa['nama_siswa'] ?></h6>
-                <div class="small opacity-75"><?= $siswa['kelas'] ?> | Ujian Teori</div>
+    <div class="container py-4" style="max-width: 1080px;">
+        <div class="exam-head mb-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div>
+                <p class="exam-head__name mb-0"><?= esc($siswa['nama_siswa']) ?></p>
+                <div class="exam-head__meta">
+                    <i class="bi bi-person-vcard"></i> <?= esc($siswa['kelas']) ?>
+                    <span class="mx-1 opacity-50">•</span>
+                    <i class="bi bi-journal-text"></i> Ujian Teori
+                </div>
             </div>
+            <span class="exam-head__badge"><i class="bi bi-shield-lock me-1"></i> Mode Ujian</span>
         </div>
 
         <div class="floating-nav">
@@ -188,8 +323,8 @@
         <?php endforeach; ?>
 
         <div class="p-3">
-            <button onclick="finalisasi()" class="btn btn-danger w-100 py-3 fw-bold shadow">
-                SELESAI & KUNCI JAWABAN
+            <button onclick="finalisasi()" class="btn btn-finish text-white w-100 py-3 shadow">
+                <i class="bi bi-lock-fill me-2"></i> SELESAI &amp; KUNCI JAWABAN
             </button>
         </div>
     </div>

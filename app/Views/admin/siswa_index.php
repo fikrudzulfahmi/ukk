@@ -4,46 +4,47 @@
 <style>
     /* Merapikan Search Box & Pagination DataTable */
     .dataTables_wrapper .dataTables_filter input {
-        border-radius: 8px;
-        border: 1px solid #dee2e6;
-        padding: 5px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--uk-line, #e2e8f0);
+        padding: 6px 14px;
         margin-left: 10px;
+        background: #fff;
     }
 
     .dataTables_wrapper .dataTables_length select {
-        border-radius: 8px;
-        padding: 5px;
+        border-radius: 10px;
+        border: 1px solid var(--uk-line, #e2e8f0);
+        padding: 5px 10px;
     }
 
     .page-item.active .page-link {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
-
-    /* Mempercantik baris */
-    table.dataTable.no-footer {
-        border-bottom: 1px solid #f0f0f0 !important;
+        background: linear-gradient(135deg, #4338ca, #6366f1);
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, .35);
     }
 
     #tableSiswa tbody tr td {
-        padding: 15px 10px;
-        /* Membuat baris lebih lega */
+        padding: 13px 12px;
+    }
+
+    #tableSiswa tbody tr:hover {
+        background-color: #fbfbfe;
     }
 </style>
 
-<div class="card border-0 shadow-sm" style="border-radius: 12px;">
-    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center" style="border-radius: 12px 12px 0 0;">
+<div class="card border-0 shadow-sm" style="border-radius: 16px; border: 1px solid var(--uk-line, #e5e7eb) !important;">
+    <div class="card-header bg-white py-3 px-4 d-flex justify-content-between align-items-center" style="border-radius: 16px 16px 0 0; border-bottom: 1px solid var(--uk-line, #e5e7eb);">
         <div>
-            <h5 class="fw-bold mb-0 text-dark">
-                <i class="bi bi-people-fill me-2 text-primary"></i>Data Peserta
+            <h5 class="fw-bold mb-0 text-dark" style="letter-spacing: -.02em;">
+                <i class="bi bi-people-fill me-2 text-primary"></i>Data Peserta UKK
             </h5>
-            <small class="text-muted">Event: <?= session()->get('nama_event') ?></small>
+            <small class="text-muted"><i class="bi bi-calendar-event me-1"></i> <?= esc(session()->get('nama_event') ?? 'Event Aktif') ?></small>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-light-success btn-sm fw-bold px-3" data-bs-toggle="modal" data-bs-target="#modalImport" style="background-color: #e8f5e9; color: #2e7d32; border: none;">
-                <i class="bi bi-file-earmark-excel-fill me-1"></i> Import
+            <button class="btn btn-sm fw-bold px-3 rounded-3" data-bs-toggle="modal" data-bs-target="#modalImport" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                <i class="bi bi-file-earmark-excel-fill me-1"></i> Import Excel
             </button>
-            <button class="btn btn-primary btn-sm fw-bold px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
+            <button class="btn btn-primary btn-sm fw-bold px-3 rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah" style="background: linear-gradient(135deg, #4338ca, #6366f1); border: none;">
                 <i class="bi bi-plus-lg me-1"></i> Tambah Siswa
             </button>
         </div>

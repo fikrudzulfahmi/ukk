@@ -2,37 +2,76 @@
 
 <?= $this->section('content') ?>
 <style>
+    body { background: var(--uk-canvas, #f5f6fa); }
+
+    .dual-head {
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem;
+        border-radius: 18px; padding: 1.1rem 1.4rem; color: #fff;
+        background:
+            radial-gradient(120% 140% at 100% 0%, rgba(124, 58, 237, .55), transparent 55%),
+            linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4338ca 100%);
+        box-shadow: 0 20px 44px -30px rgba(30, 27, 75, .9);
+        margin-bottom: 1.25rem;
+    }
+
+    .dual-head__title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -.02em;
+        margin: 0;
+    }
+
+    .dual-head__badge {
+        background: rgba(255, 255, 255, .15);
+        border: 1px solid rgba(255, 255, 255, .25);
+        color: #fff;
+        font-weight: 600;
+        padding: .4rem .9rem;
+        border-radius: 999px;
+    }
+
     .assessment-card {
-        border-radius: 15px;
-        border: none;
+        border-radius: 18px !important;
+        border: 1px solid var(--uk-line) !important;
+        box-shadow: var(--uk-shadow-sm) !important;
+        overflow: hidden;
     }
 
     .table thead th {
-        background-color: #212529;
+        background: #1e1b4b !important;
         color: #fff;
         position: sticky;
         top: 0;
         z-index: 100;
+        border: none;
+        font-size: .82rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        padding-top: .85rem;
+        padding-bottom: .85rem;
     }
 
     /* Segmented Control 4 Opsi */
     .rubrik-group {
         display: flex;
-        background: #eee;
-        padding: 2px;
-        border-radius: 8px;
+        background: #eef2f6;
+        padding: 3px;
+        border-radius: 10px;
         width: 100%;
-        min-width: 240px;
+        min-width: 250px;
+        gap: 2px;
     }
 
     .rubrik-group .btn-check+.btn {
         flex: 1;
         font-size: 11px;
-        padding: 6px 2px;
+        padding: 6px 3px;
         border: none;
-        border-radius: 6px;
-        font-weight: bold;
-        color: #666;
+        border-radius: 8px;
+        font-weight: 700;
+        color: #475569;
+        transition: all .15s ease;
     }
 
     /* Warna khusus sesuai level */
@@ -101,16 +140,22 @@
     }
 </style>
 
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid py-3">
+    <div class="dual-head">
         <div>
-            <h3 class="fw-bold mb-0">Input Nilai Praktek (Skala 4)</h3>
-            <p class="text-muted mb-0"><?= $pos['nama_pos'] ?> | Mode Penilaian <?= count($siswa_list) ?> Peserta</p>
+            <h3 class="dual-head__title"><i class="bi bi-ui-checks-grid me-2"></i> Input Nilai Praktek (Skala 4)</h3>
+            <small class="opacity-75">
+                <i class="bi bi-geo-alt"></i> <?= esc($pos['nama_pos']) ?>
+                <span class="mx-1">•</span>
+                <i class="bi bi-people"></i> Mode <?= count($siswa_list) ?> Peserta Serentak
+            </small>
         </div>
-        <a href="<?= base_url('penilaian?date=' . $current_date) ?>"
-            class="btn btn-outline-dark rounded-pill px-4 fw-bold">
-            <i class="bi bi-arrow-left me-1"></i> Kembali
-        </a>
+        <div class="d-flex align-items-center gap-2">
+            <span class="dual-head__badge"><i class="bi bi-lightning-charge me-1"></i> Auto-Save Aktif</span>
+            <a href="<?= base_url('penilaian?date=' . $current_date) ?>" class="btn btn-sm btn-light rounded-pill px-3 fw-bold">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
+        </div>
     </div>
 
     <div id="save-status" class="alert alert-dark shadow-lg py-2 px-4 rounded-pill border-0">

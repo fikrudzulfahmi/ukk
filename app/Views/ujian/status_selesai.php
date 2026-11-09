@@ -39,6 +39,43 @@
             border-radius: 15px;
         }
     </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('assets/css/ukk.css') ?>">
+
+    <style>
+        body {
+            background:
+                radial-gradient(760px 420px at 12% -10%, rgba(99, 102, 241, .16), transparent 62%),
+                radial-gradient(680px 420px at 100% 108%, rgba(168, 85, 247, .16), transparent 60%),
+                #f6f7fb;
+        }
+
+        .finish-card {
+            border-radius: 24px;
+            border: 1px solid var(--uk-line);
+            box-shadow: 0 28px 70px -46px rgba(16, 24, 40, .55);
+        }
+
+        .icon-box {
+            width: 74px;
+            height: 74px;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #047857;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            margin: 0 auto 18px;
+            font-size: 2rem;
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
+            border: 1px solid #e2e0ff;
+            border-radius: 18px;
+        }
+    </style>
 </head>
 
 <body>
