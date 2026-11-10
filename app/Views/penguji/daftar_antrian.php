@@ -130,7 +130,7 @@
         <div class="card-body p-3">
             <div class="row align-items-center">
                 <div class="col-12 col-md-4 mb-3 mb-md-0">
-                    <form method="get" action="<?= base_url('penilaian') ?>" id="form-tanggal">
+                    <form method="get" action="<?= base_url('penilaian/input') ?>" id="form-tanggal">
                         <div class="form-group mb-0">
                             <label class="form-label text-muted small fw-bold text-uppercase mb-1">Pilih Tanggal Ujian</label>
                             <input type="date" name="date" class="form-control form-control-sm" value="<?= $tanggal_filter ?>" onchange="document.getElementById('form-tanggal').submit();">
@@ -147,7 +147,7 @@
                                 // Cek apakah pos ini yang sedang aktif dibuka
                                 $isActive = ($lp['id_pos'] == $active_pos_id) ? 'btn-primary shadow-sm' : 'btn-outline-primary';
                                 ?>
-                                <a href="<?= base_url('penilaian?date=' . $tanggal_filter . '&id_pos=' . $lp['id_pos']) ?>" class="btn btn-sm <?= $isActive ?>">
+                                <a href="<?= base_url('penilaian/input?date=' . $tanggal_filter . '&id_pos=' . $lp['id_pos']) ?>" class="btn btn-sm <?= $isActive ?>">
                                     <i class="fas fa-desktop me-1"></i> <?= $lp['nama_pos'] ?>
                                 </a>
                             <?php endforeach; ?>

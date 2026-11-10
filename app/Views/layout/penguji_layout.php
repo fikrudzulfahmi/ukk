@@ -109,6 +109,40 @@
             padding: 1.6rem 0 5rem;
             max-width: 1200px;
         }
+
+        .pg-nav {
+            display: none;
+            align-items: center;
+            gap: .25rem;
+            padding: .25rem;
+            background: #f8fafc;
+            border: 1px solid var(--uk-line);
+            border-radius: 999px;
+        }
+
+        .pg-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .4rem .85rem;
+            border-radius: 999px;
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--uk-ink-2);
+            text-decoration: none;
+            transition: .18s ease;
+        }
+
+        .pg-nav a:hover { color: var(--uk-brand); }
+
+        .pg-nav a.active {
+            background: var(--uk-brand-soft);
+            color: var(--uk-brand);
+        }
+
+        @media (min-width: 768px) {
+            .pg-nav { display: inline-flex; }
+        }
     </style>
 </head>
 
@@ -121,6 +155,18 @@
                 <span class="pg-title">Penilaian Penguji</span>
                 <span class="pg-sub">E-UKK TSM SMK Islam 1 Blitar</span>
             </div>
+
+            <nav class="pg-nav">
+                <a href="<?= base_url('penilaian') ?>" class="<?= url_is('penilaian') ? 'active' : '' ?>">
+                    <i class="bi bi-house-door"></i> Beranda
+                </a>
+                <a href="<?= base_url('penilaian/input') ?>" class="<?= (url_is('penilaian/input*') || url_is('penilaian/input_dual*')) ? 'active' : '' ?>">
+                    <i class="bi bi-pencil-square"></i> Input Nilai
+                </a>
+                <a href="<?= base_url('penilaian/riwayat') ?>" class="<?= url_is('penilaian/riwayat*') ? 'active' : '' ?>">
+                    <i class="bi bi-clock-history"></i> Riwayat
+                </a>
+            </nav>
 
             <span class="pg-user d-none d-sm-inline-flex">
                 <span class="pg-avatar"><?= esc(strtoupper(substr(session()->get('nama_lengkap') ?? 'P', 0, 1))) ?></span>
@@ -141,7 +187,13 @@
     <nav class="uk-bottom-bar">
         <ul class="uk-bottom-bar-nav">
             <li class="uk-bottom-bar-item">
-                <a href="<?= base_url('penilaian') ?>" class="uk-bottom-link <?= (url_is('penilaian*') && !url_is('penilaian/riwayat*') ? 'active' : '') ?>">
+                <a href="<?= base_url('penilaian') ?>" class="uk-bottom-link <?= url_is('penilaian') ? 'active' : '' ?>">
+                    <i class="bi bi-house-door"></i>
+                    <span>Beranda</span>
+                </a>
+            </li>
+            <li class="uk-bottom-bar-item">
+                <a href="<?= base_url('penilaian/input') ?>" class="uk-bottom-link <?= (url_is('penilaian/input*') || url_is('penilaian/input_dual*')) ? 'active' : '' ?>">
                     <i class="bi bi-pencil-square"></i>
                     <span>Input Nilai</span>
                 </a>
@@ -150,12 +202,6 @@
                 <a href="<?= base_url('penilaian/riwayat') ?>" class="uk-bottom-link <?= (url_is('penilaian/riwayat*') ? 'active' : '') ?>">
                     <i class="bi bi-clock-history"></i>
                     <span>Riwayat</span>
-                </a>
-            </li>
-            <li class="uk-bottom-bar-item">
-                <a href="<?= base_url('monitoring/matriks') ?>" class="uk-bottom-link <?= (url_is('monitoring*') ? 'active' : '') ?>">
-                    <i class="bi bi-speedometer2"></i>
-                    <span>Matriks</span>
                 </a>
             </li>
             <li class="uk-bottom-bar-item">

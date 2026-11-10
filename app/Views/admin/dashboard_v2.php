@@ -10,7 +10,7 @@
             <p class="text-muted small mb-0">Berikut ringkasan pelaksanaan uji kompetensi saat ini.</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="<?= base_url('penilaian') ?>" class="btn btn-primary btn-sm">
+            <a href="<?= base_url('penilaian/input') ?>" class="btn btn-primary btn-sm">
                 <i class="bi bi-pencil-square me-1"></i> Input Nilai
             </a>
             <a href="<?= base_url('laporan') ?>" class="btn btn-light btn-sm">

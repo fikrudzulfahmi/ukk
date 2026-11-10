@@ -16,32 +16,59 @@ class Penguji extends BaseController
     public function index()
     {
         $data = [
-            'title'   => 'Manajemen Data Penguji',
-            'penguji' => $this->userModel->where('role', 'penguji')->findAll()
+            'title' => 'Manajemen User',
+            'users' => $this->userModel
+                ->orderBy("FIELD(role, 'admin', 'penguji')", 'ASC', false)
+                ->orderBy('nama_lengkap', 'ASC')
+                ->findAll()
         ];
         return view('admin/penguji_index', $data);
     }
 
     public function store()
     {
+        $username = trim((string) $this->request->getPost('username'));
+
+        if ($this->userModel->where('username', $username)->countAllResults() > 0) {
+            return redirect()->to('/penguji')->with('error', 'Username sudah dipakai akun lain.');
+        }
+
+        $role = $this->request->getPost('role') === 'admin' ? 'admin' : 'penguji';
+
         $this->userModel->insert([
-            'username'  => $this->request->getPost('username'),
+            'username'     => $username,
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
-            'instansi' => $this->request->getPost('instansi'),
-            'password'  => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'role'      => 'penguji'
+            'instansi'     => $this->request->getPost('instansi'),
+            'password'     => password_hash((string) $this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role'         => $role
         ]);
 
-        return redirect()->to('/penguji')->with('success', 'Data penguji berhasil ditambahkan.');
+        return redirect()->to('/penguji')->with('success', 'Akun berhasil ditambahkan.');
     }
 
     public function update($id)
     {
+        $username = trim((string) $this->request->getPost('username'));
+
+        $bentrok = $this->userModel
+            ->where('username', $username)
+            ->where('id_user !=', $id)
+            ->countAllResults();
+
+        if ($bentrok > 0) {
+            return redirect()->to('/penguji')->with('error', 'Username sudah dipakai akun lain.');
+        }
+
         $data = [
-            'username'  => $this->request->getPost('username'),
+            'username'     => $username,
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
-            'instansi' => $this->request->getPost('instansi'),
+            'instansi'     => $this->request->getPost('instansi'),
         ];
+
+        $role = $this->request->getPost('role');
+        if (in_array($role, ['admin', 'penguji'], true)) {
+            $data['role'] = $role;
+        }
 
         // Update password hanya jika diisi
         $pass = $this->request->getPost('password');
@@ -50,13 +77,17 @@ class Penguji extends BaseController
         }
 
         $this->userModel->update($id, $data);
-        return redirect()->to('/penguji')->with('success', 'Data penguji diperbarui.');
+        return redirect()->to('/penguji')->with('success', 'Data akun diperbarui.');
     }
 
     public function delete($id)
     {
+        if ((int) $id === (int) session()->get('id_user')) {
+            return redirect()->to('/penguji')->with('error', 'Tidak bisa menghapus akun yang sedang digunakan.');
+        }
+
         $this->userModel->delete($id);
-        return redirect()->to('/penguji')->with('success', 'Data penguji berhasil dihapus.');
+        return redirect()->to('/penguji')->with('success', 'Akun berhasil dihapus.');
     }
 
     public function cetak_akun_penguji()

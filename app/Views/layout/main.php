@@ -387,8 +387,8 @@
                             <span class="nav-text">Jadwal Siswa</span>
                         </a>
                         <a href="<?= base_url('penguji') ?>" class="nav-link <?= (url_is('penguji*') ? 'active' : '') ?>">
-                            <i class="bi bi-person-badge"></i>
-                            <span class="nav-text">Data Penguji</span>
+                            <i class="bi bi-person-gear"></i>
+                            <span class="nav-text">Manajemen User</span>
                         </a>
                         <a href="<?= base_url('plotting') ?>" class="nav-link <?= (url_is('plotting*') ? 'active' : '') ?>">
                             <i class="bi bi-person-workspace"></i>

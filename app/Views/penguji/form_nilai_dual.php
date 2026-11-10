@@ -157,7 +157,7 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <span class="dual-head__badge"><i class="bi bi-lightning-charge me-1"></i> Auto-Save Aktif</span>
-            <a href="<?= base_url('penilaian?date=' . $current_date) ?>" class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-success">
+            <a href="<?= base_url('penilaian/input?date=' . $current_date) ?>" class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-success">
                 <i class="bi bi-arrow-left me-1"></i> Kembali
             </a>
         </div>

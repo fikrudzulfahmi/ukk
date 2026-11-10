@@ -11,11 +11,11 @@ $routes->post('auth/login', 'Auth::login');
 $routes->get('logout', 'Auth::logout');
 
 // Proteksi Auth (Harus Login)
-$routes->group('', ['filter' => 'auth'], function ($routes) {
+$routes->group('', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('dashboard', 'Dashboard::index');
 });
 
-$routes->group('event', ['filter' => 'auth'], function ($routes) {
+$routes->group('event', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Event::index');
     $routes->post('store', 'Event::store'); // Untuk Tambah
     $routes->post('update/(:num)', 'Event::update/$1'); // Untuk Edit
@@ -23,7 +23,7 @@ $routes->group('event', ['filter' => 'auth'], function ($routes) {
     $routes->get('delete/(:num)', 'Event::delete/$1');
 });
 
-$routes->group('siswa', ['filter' => 'auth'], function ($routes) {
+$routes->group('siswa', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Siswa::index');
     $routes->post('store', 'Siswa::store');
     $routes->post('update/(:num)', 'Siswa::update/$1');
@@ -32,7 +32,7 @@ $routes->group('siswa', ['filter' => 'auth'], function ($routes) {
     $routes->post('get_data', 'Siswa::get_data');
 });
 
-$routes->group('elemen', ['filter' => 'auth'], function ($routes) {
+$routes->group('elemen', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Elemen::index');
     $routes->post('store', 'Elemen::store');
     $routes->post('import', 'Elemen::import');
@@ -42,14 +42,14 @@ $routes->group('elemen', ['filter' => 'auth'], function ($routes) {
     $routes->get('delete/(:num)', 'Elemen::delete/$1');
 });
 
-$routes->group('pos', ['filter' => 'auth'], function ($routes) {
+$routes->group('pos', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Pos::index');           // Menampilkan daftar pos
     $routes->post('store', 'Pos::store');       // Menyimpan pos baru
     $routes->post('update/(:num)', 'Pos::update/$1');
     $routes->get('delete/(:num)', 'Pos::delete/$1'); // Menghapus pos
 });
 
-$routes->group('penguji', ['filter' => 'auth'], function ($routes) {
+$routes->group('penguji', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Penguji::index');
     $routes->post('store', 'Penguji::store');
     $routes->post('update/(:num)', 'Penguji::update/$1');
@@ -58,7 +58,7 @@ $routes->group('penguji', ['filter' => 'auth'], function ($routes) {
     $routes->get('cetak_akun', 'Penguji::cetak_akun_penguji');
 });
 
-$routes->group('plotting', ['filter' => 'auth'], function ($routes) {
+$routes->group('plotting', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'EventPenguji::index');
     $routes->post('store', 'EventPenguji::store');
     $routes->post('update/(:num)', 'EventPenguji::update/$1');
@@ -67,7 +67,7 @@ $routes->group('plotting', ['filter' => 'auth'], function ($routes) {
     $routes->get('cetak-semua-jadwal-penguji', 'EventPenguji::cetakSemuaJadwal');
 });
 
-$routes->group('jadwal', ['filter' => 'auth'], function ($routes) {
+$routes->group('jadwal', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Jadwal::index');
     $routes->post('store', 'Jadwal::store');
     $routes->post('update/(:num)', 'Jadwal::update/$1');
@@ -79,7 +79,7 @@ $routes->group('jadwal', ['filter' => 'auth'], function ($routes) {
     $routes->get('cetak_kartu_massal', 'Jadwal::cetak_kartu_massal');
 });
 
-$routes->group('soalteori', ['filter' => 'auth'], function ($routes) {
+$routes->group('soalteori', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'SoalTeori::index'); // Langsung ke Penilaian
     $routes->post('simpan', 'SoalTeori::simpan');
     $routes->get('hapus/(:num)', 'SoalTeori::hapus/$1');
@@ -91,13 +91,13 @@ $routes->group('soalteori', ['filter' => 'auth'], function ($routes) {
 });
 
 // Rute Nilai Teori (Sudah disesuaikan)
-$routes->group('nilai_teori', ['filter' => 'auth'], function ($routes) {
+$routes->group('nilai_teori', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Penilaian::nilai_teori'); // Langsung ke Penilaian
     $routes->get('(:num)', 'Penilaian::nilai_teori/$1');
     $routes->post('simpan_ajax', 'Penilaian::simpan_teori_ajax');
 });
 
-$routes->group('monitoring', ['filter' => 'auth'], function ($routes) {
+$routes->group('monitoring', ['filter' => ['auth', 'admin']], function ($routes) {
     // URL: base_url('monitoring/matriks')
     $routes->get('matriks', 'Penilaian::monitoring_matriks');
 
@@ -105,7 +105,7 @@ $routes->group('monitoring', ['filter' => 'auth'], function ($routes) {
     $routes->get('cetak_rekap_harian', 'Penilaian::cetak_rekap_harian');
 });
 
-$routes->group('laporan', ['filter' => 'auth'], function ($routes) {
+$routes->group('laporan', ['filter' => ['auth', 'admin']], function ($routes) {
     // URL: base_url('laporan/rekap_nilai')
     $routes->get('/', 'Penilaian::rekap_nilai');
     $routes->get('export_pdf', 'Penilaian::export_pdf');
@@ -117,6 +117,8 @@ $routes->group('laporan', ['filter' => 'auth'], function ($routes) {
 
 $routes->group('penilaian', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'Penilaian::index');
+    $routes->get('input', 'Penilaian::input');
+    $routes->get('riwayat', 'Penilaian::riwayat');
     // Menggunakan (:any) karena jam mengandung karakter ':' (contoh: 08:30:00)
     $routes->get('dual/(:any)/(:num)', 'Penilaian::input_dual/$1/$2');
     // Pastikan parameter pertama (:num) untuk sesi_ke dan kedua (:num) untuk id_pos
@@ -137,7 +139,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 });
 
 
-$routes->group('dokumentasi', ['filter' => 'auth'], function ($routes) {
+$routes->group('dokumentasi', ['filter' => ['auth', 'admin']], function ($routes) {
     // URL: base_url('dokumentasi')
     $routes->get('/', 'Dokumentasi::index');
 

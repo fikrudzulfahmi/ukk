@@ -9,9 +9,20 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Penilaian extends BaseController
 {
-    // Halaman utama bagi penguji: Daftar Siswa yang harus dinilai hari ini
-    // Halaman utama bagi penguji: Daftar Siswa yang harus dinilai hari ini
+    // Beranda penguji: ringkasan progres penilaian
     public function index()
+    {
+        $id_user  = (int) session()->get('id_user');
+        $id_event = (int) session()->get('active_event_id');
+
+        return view('penguji/beranda', array_merge(
+            ['title' => 'Beranda Penguji'],
+            $this->statistikPenguji($id_user, $id_event)
+        ));
+    }
+
+    // Halaman input nilai: daftar siswa yang harus dinilai hari ini
+    public function input()
     {
         $id_user    = session()->get('id_user');
         $id_event   = session()->get('active_event_id');
@@ -943,4 +954,204 @@ class Penilaian extends BaseController
             ->setHeader('Content-Disposition', 'inline; filename="Pengumuman_Harian_UKK_' . $current_date . '.pdf"')
             ->setBody($dompdf->output());
     }
+
+    /**
+     * Riwayat penilaian penguji: rekap per tanggal + POS yang pernah diuji.
+     */
+    public function riwayat()
+    {
+        $id_user  = (int) session()->get('id_user');
+        $id_event = (int) session()->get('active_event_id');
+
+        return view('penguji/riwayat', [
+            'title'   => 'Riwayat Penilaian',
+            'riwayat' => $this->riwayatSiswa($id_user, $id_event),
+        ]);
+    }
+
+    /**
+     * Statistik ringkas untuk beranda penguji.
+     */
+    private function statistikPenguji(int $idUser, int $idEvent): array
+    {
+        $db    = \Config\Database::connect();
+        $today = date('Y-m-d');
+
+        $plotting = $db->table('event_penguji')
+            ->select('id_pos, tanggal')
+            ->where('id_user', $idUser)
+            ->where('id_event', $idEvent)
+            ->get()->getResultArray();
+
+        $posIds   = array_values(array_unique(array_map('intval', array_column($plotting, 'id_pos'))));
+        $posHariIni = [];
+        foreach ($plotting as $p) {
+            if (date('Y-m-d', strtotime((string) $p['tanggal'])) === $today) {
+                $posHariIni[(int) $p['id_pos']] = true;
+            }
+        }
+
+        $hasil = [
+            'hari_ini'      => 0,
+            'total_siswa'   => 0,
+            'selesai'       => 0,
+            'belum'         => 0,
+            'proses'        => 0,
+            'pos_hari_ini'  => [],
+            'jumlah_pos'    => count($posIds),
+        ];
+
+        if (empty($posIds)) {
+            return $hasil;
+        }
+
+        // Semua jadwal pada POS yang diplot untuk penguji ini
+        $jadwal = $db->table('penjadwalan')
+            ->select('id_siswa, id_pos, tanggal_ujian')
+            ->where('id_event', $idEvent)
+            ->whereIn('id_pos', $posIds)
+            ->get()->getResultArray();
+
+        // Jumlah elemen per POS
+        $elemenPerPos = [];
+        foreach ($db->table('elemen_penilaian')
+            ->select('id_pos, COUNT(*) AS jml')
+            ->whereIn('id_pos', $posIds)
+            ->groupBy('id_pos')
+            ->get()->getResultArray() as $row) {
+            $elemenPerPos[(int) $row['id_pos']] = (int) $row['jml'];
+        }
+
+        // Jumlah elemen terisi per siswa per POS
+        $terisiMap = [];
+        foreach ($db->table('nilai_praktek np')
+            ->select('np.id_siswa, ep.id_pos, COUNT(DISTINCT np.id_elemen) AS jml')
+            ->join('elemen_penilaian ep', 'ep.id_elemen = np.id_elemen')
+            ->where('np.id_event', $idEvent)
+            ->whereIn('ep.id_pos', $posIds)
+            ->groupBy('np.id_siswa, ep.id_pos')
+            ->get()->getResultArray() as $row) {
+            $terisiMap[(int) $row['id_siswa'] . ':' . (int) $row['id_pos']] = (int) $row['jml'];
+        }
+
+        $sudahDihitung = [];
+        foreach ($jadwal as $j) {
+            $key = (int) $j['id_siswa'] . ':' . (int) $j['id_pos'];
+            if (isset($sudahDihitung[$key])) {
+                continue;
+            }
+            $sudahDihitung[$key] = true;
+
+            $hasil['total_siswa']++;
+            if (isset($posHariIni[(int) $j['id_pos']]) && date('Y-m-d', strtotime((string) $j['tanggal_ujian'])) === $today) {
+                $hasil['hari_ini']++;
+            }
+
+            $total  = $elemenPerPos[(int) $j['id_pos']] ?? 0;
+            $terisi = $terisiMap[$key] ?? 0;
+
+            if ($total > 0 && $terisi >= $total) {
+                $hasil['selesai']++;
+            } elseif ($terisi > 0) {
+                $hasil['proses']++;
+            } else {
+                $hasil['belum']++;
+            }
+        }
+
+        // Detail POS yang diuji hari ini (untuk tombol cepat di beranda)
+        if (!empty($posHariIni)) {
+            $hasil['pos_hari_ini'] = $db->table('pos_ukk')
+                ->select('id_pos, nama_pos')
+                ->whereIn('id_pos', array_keys($posHariIni))
+                ->orderBy('nama_pos', 'ASC')
+                ->get()->getResultArray();
+        }
+
+        return $hasil;
+    }
+
+    /**
+     * Rekap riwayat per tanggal + POS.
+     */
+    private function riwayatSiswa(int $idUser, int $idEvent): array
+    {
+        $db = \Config\Database::connect();
+
+        $posIds = array_column(
+            $db->table('event_penguji')
+                ->select('id_pos')
+                ->where('id_user', $idUser)
+                ->where('id_event', $idEvent)
+                ->get()->getResultArray(),
+            'id_pos'
+        );
+        $posIds = array_values(array_unique(array_map('intval', $posIds)));
+
+        if (empty($posIds)) {
+            return [];
+        }
+
+        $elemenPerPos = [];
+        foreach ($db->table('elemen_penilaian')
+            ->select('id_pos, COUNT(*) AS jml')
+            ->whereIn('id_pos', $posIds)
+            ->groupBy('id_pos')
+            ->get()->getResultArray() as $row) {
+            $elemenPerPos[(int) $row['id_pos']] = (int) $row['jml'];
+        }
+
+        $terisiMap = [];
+        foreach ($db->table('nilai_praktek np')
+            ->select('np.id_siswa, ep.id_pos, COUNT(DISTINCT np.id_elemen) AS jml')
+            ->join('elemen_penilaian ep', 'ep.id_elemen = np.id_elemen')
+            ->where('np.id_event', $idEvent)
+            ->whereIn('ep.id_pos', $posIds)
+            ->groupBy('np.id_siswa, ep.id_pos')
+            ->get()->getResultArray() as $row) {
+            $terisiMap[(int) $row['id_siswa'] . ':' . (int) $row['id_pos']] = (int) $row['jml'];
+        }
+
+        $rows = $db->table('penjadwalan j')
+            ->select('j.id_siswa, j.id_pos, j.tanggal_ujian, s.nama_siswa, s.kelas, p.nama_pos')
+            ->join('siswa s', 's.id_siswa = j.id_siswa', 'left')
+            ->join('pos_ukk p', 'p.id_pos = j.id_pos', 'left')
+            ->where('j.id_event', $idEvent)
+            ->whereIn('j.id_pos', $posIds)
+            ->get()->getResultArray();
+
+        $riwayat = [];
+        foreach ($rows as $row) {
+            $posId  = (int) $row['id_pos'];
+            $total  = $elemenPerPos[$posId] ?? 0;
+            $terisi = $terisiMap[(int) $row['id_siswa'] . ':' . $posId] ?? 0;
+
+            $status = 'belum';
+            if ($total > 0 && $terisi >= $total) {
+                $status = 'selesai';
+            } elseif ($terisi > 0) {
+                $status = 'proses';
+            }
+
+            $riwayat[] = [
+                'id_siswa'    => (int) $row['id_siswa'],
+                'nama_siswa'  => $row['nama_siswa'] ?: 'Siswa #' . $row['id_siswa'],
+                'kelas'       => $row['kelas'] ?? '',
+                'id_pos'      => $posId,
+                'nama_pos'    => $row['nama_pos'] ?: 'POS #' . $posId,
+                'tanggal'     => date('Y-m-d', strtotime((string) $row['tanggal_ujian'])),
+                'total'       => $total,
+                'terisi'      => $terisi,
+                'persen'      => $total > 0 ? (int) round(($terisi / $total) * 100) : 0,
+                'status'      => $status,
+            ];
+        }
+
+        usort($riwayat, static function ($a, $b) {
+            return [$b['tanggal'], $a['nama_siswa']] <=> [$a['tanggal'], $b['nama_siswa']];
+        });
+
+        return $riwayat;
+    }
+
 }
