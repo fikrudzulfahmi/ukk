@@ -36,6 +36,9 @@ $routes->group('siswa', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->post('induk/import', 'Siswa::induk_import');
 });
 
+// DEBUG sementara (tanpa auth) — hapus setelah diagnosis selesai
+$routes->get('debug_induk', 'DebugInduk::index');
+
 $routes->group('elemen', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('/', 'Elemen::index');
     $routes->post('store', 'Elemen::store');
