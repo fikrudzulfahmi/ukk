@@ -145,7 +145,7 @@
                             <?php foreach ($list_pos as $lp): ?>
                                 <?php
                                 // Cek apakah pos ini yang sedang aktif dibuka
-                                $isActive = ($lp['id_pos'] == $active_pos_id) ? 'btn-primary shadow-sm' : 'btn-outline-primary';
+                                $isActive = ($lp['id_pos'] == $active_pos_id) ? 'btn-success shadow-sm' : 'btn-outline-success';
                                 ?>
                                 <a href="<?= base_url('penilaian/input?date=' . $tanggal_filter . '&id_pos=' . $lp['id_pos']) ?>" class="btn btn-sm <?= $isActive ?>">
                                     <i class="fas fa-desktop me-1"></i> <?= $lp['nama_pos'] ?>
@@ -228,7 +228,7 @@
                                 $rowClass    = 'bg-white';
                                 $statusLabel = 'Menunggu';
                                 $dotColor    = 'text-secondary';
-                                $btnStyle    = 'btn-primary';
+                                $btnStyle    = 'btn-success text-white';
                                 $btnText     = 'Mulai Nilai';
                             }
                         ?>
@@ -244,8 +244,8 @@
                                         <?php foreach ($pair as $s) : ?>
                                             <div class="col-12 col-lg-6">
                                                 <div class="student-item d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center justify-content-center fw-bold text-white rounded-circle shadow-sm"
-                                                        style="width:40px; height:40px; background:#0d6efd; font-size:0.9rem; flex-shrink: 0;">
+                                                    <div class="d-flex align-items-center justify-content-center fw-bold text-dark rounded-circle border"
+                                                        style="width:38px; height:38px; background:#f1f5f9; border-color:#cbd5e1 !important; font-size:0.88rem; flex-shrink: 0;">
                                                         <?= $mapping_no[$s['id_siswa']] ?? '-' ?>
                                                     </div>
 
@@ -286,7 +286,7 @@
                                                             Skor: <?= $rataRata ?>
                                                         </div>
                                                         <div class="progress mt-1" style="height: 5px; background: #eee;">
-                                                            <div class="progress-bar <?= $isSelesai ? ($isKompeten ? 'bg-success' : 'bg-danger') : 'bg-primary' ?>"
+                                                            <div class="progress-bar <?= $isSelesai ? ($isKompeten ? 'bg-success' : 'bg-danger') : 'bg-success' ?>"
                                                                 role="progressbar" style="width: <?= $persen ?>%;"></div>
                                                         </div>
                                                     </div>
