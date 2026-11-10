@@ -51,6 +51,7 @@ $routes->group('pos', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->post('store', 'Pos::store');       // Menyimpan pos baru
     $routes->post('update/(:num)', 'Pos::update/$1');
     $routes->get('delete/(:num)', 'Pos::delete/$1'); // Menghapus pos
+    $routes->post('clone', 'Pos::clone');            // Clone POS dari event lain
 });
 
 $routes->group('penguji', ['filter' => ['auth', 'admin']], function ($routes) {
