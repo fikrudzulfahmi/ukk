@@ -379,12 +379,17 @@
             });
         }
 
-        $('#btnIndukImport').on('click', function() {
+        $('#btnIndukImport').on('click', async function() {
             let kelas   = $('#indukKelas').val();
             let tingkat = $('#indukTingkat').val();
             let status  = $('#indukStatus').val();
 
-            if (!confirm('Import semua siswa baru dari filter ini? NISN yang sudah ada otomatis dilewati.')) return;
+            const ok = await ukConfirm({
+                title: 'Import Siswa Sekarang?',
+                text: 'Semua siswa baru dari filter ini akan ditambahkan. NISN yang sudah ada otomatis dilewati.',
+                confirmButtonText: 'Ya, Import'
+            });
+            if (!ok) return;
 
             let $btn = $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Importing...');
             $.post("<?= base_url('siswa/induk/import') ?>", {

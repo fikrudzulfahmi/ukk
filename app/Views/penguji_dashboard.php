@@ -40,6 +40,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function mulaiUjian() {
             const pos = document.getElementById('select-pos').value;
@@ -47,7 +48,13 @@
                 .map(cb => cb.value);
 
             if (selectedSiswa.length !== 2) {
-                alert("Pilih tepat 2 siswa untuk memulai mode tandem!");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Pilih Tepat 2 Siswa',
+                    text: 'Mode tandem membutuhkan tepat 2 siswa untuk diuji bersamaan.',
+                    confirmButtonColor: '#059669',
+                    confirmButtonText: 'Mengerti'
+                });
                 return;
             }
 

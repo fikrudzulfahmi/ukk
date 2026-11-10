@@ -63,8 +63,8 @@
                                     </div>
                                     <div class="col-md-3 text-md-end mt-3 mt-md-0 border-start">
                                         <a href="<?= base_url('soalteori/hapus/' . $s['id_soal']) ?>"
-                                            class="btn btn-outline-danger btn-sm"
-                                            onclick="return confirm('Hapus soal ini?')">
+                                            class="btn btn-outline-danger btn-sm js-hapus-soal"
+                                            data-url="<?= base_url('soalteori/hapus/' . $s['id_soal']) ?>">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                     </div>
@@ -248,6 +248,20 @@
                     this.submit();
                 }
             });
+        });
+
+        // Hapus soal — konfirmasi modal (bukan confirm bawaan browser)
+        $(document).on('click', '.js-hapus-soal', async function (e) {
+            e.preventDefault();
+            const url = $(this).data('url');
+            const ok = await ukConfirm({
+                title: 'Hapus soal ini?',
+                text: 'Soal akan dihapus permanen dari bank soal event aktif.',
+                icon: 'warning',
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Ya, Hapus'
+            });
+            if (ok) window.location.href = url;
         });
     }
 </script>

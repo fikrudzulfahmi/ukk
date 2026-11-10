@@ -630,6 +630,41 @@
     </script>
 
     <script>
+        /* ===== Helper notifikasi global (pengganti alert/confirm bawaan browser) ===== */
+        window.ukToast = function (icon, title) {
+            return Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: icon,
+                title: title,
+                showConfirmButton: false,
+                timer: 2600,
+                timerProgressBar: true
+            });
+        };
+
+        window.ukAlert = function (icon, title, text) {
+            return Swal.fire({
+                icon: icon || 'info',
+                title: title,
+                text: text || '',
+                confirmButtonColor: '#059669',
+                confirmButtonText: 'Mengerti'
+            });
+        };
+
+        window.ukConfirm = function (opts) {
+            return Swal.fire(Object.assign({
+                icon: 'warning',
+                showCancelButton: true,
+                reverseButtons: true,
+                confirmButtonColor: '#059669',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, opts || {})).then(function (r) { return r.isConfirmed; });
+        };
+
         function logoutConfirm() {
             Swal.fire({
                 title: 'Ingin Keluar?',

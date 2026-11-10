@@ -491,7 +491,7 @@
                     $('#save-status').fadeOut();
                 }, 400);
             }).fail(function() {
-                alert('Gagal menyimpan data nilai!');
+                ukToast('error', 'Gagal menyimpan data nilai!');
                 $('#save-status').hide();
             });
         });
@@ -510,24 +510,29 @@
                     $('#save-status').fadeOut();
                 }, 400);
             }).fail(function() {
-                alert('Gagal menyimpan catatan!');
+                ukToast('error', 'Gagal menyimpan catatan!');
                 $('#save-status').hide();
             });
         });
 
-        $(document).on('click', '.fill-all', function() {
+        $(document).on('click', '.fill-all', async function() {
             const idSiswa = $(this).data('siswa');
             const val = $(this).data('val');
 
-            if (confirm('Set semua elemen siswa ini menjadi Kompeten (85)?')) {
-                $(`input[name^="n_${idSiswa}_"][value="${val}"]`).each(function() {
-                    if (!$(this).is(':checked')) {
-                        $(this).prop('checked', true);
-                        updateVisual(this);
-                        $(this).trigger('change');
-                    }
-                });
-            }
+            const ok = await ukConfirm({
+                title: 'Set Semua Kompeten?',
+                text: 'Semua elemen penilaian siswa ini akan diisi Kompeten (85).',
+                confirmButtonText: 'Ya, Set Semua'
+            });
+            if (!ok) return;
+
+            $(`input[name^="n_${idSiswa}_"][value="${val}"]`).each(function() {
+                if (!$(this).is(':checked')) {
+                    $(this).prop('checked', true);
+                    updateVisual(this);
+                    $(this).trigger('change');
+                }
+            });
         });
 
         updateProgress(activeSiswa);

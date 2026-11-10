@@ -338,7 +338,7 @@ $bulan = [
                 }
 
                 if (count > limit) {
-                    alert('Maksimal 10 siswa!');
+                    ukToast('warning', `Maksimal ${limit} siswa!`);
                     this.checked = false;
                     displayCount.innerText = limit;
                 }

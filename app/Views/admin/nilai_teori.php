@@ -96,7 +96,7 @@
 
                     // Jika error 403, biasanya masalah CSRF. Refresh halaman.
                     if (xhr.status == 403) {
-                        alert("Sesi habis atau CSRF Error. Silakan refresh halaman.");
+                        ukAlert('warning', 'Sesi Habis', 'Sesi atau token CSRF tidak valid. Silakan refresh halaman.');
                     }
                 }
             });
