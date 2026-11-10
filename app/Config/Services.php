@@ -19,14 +19,16 @@ use CodeIgniter\Config\BaseService;
  */
 class Services extends BaseService
 {
-    /*
-     * public static function example($getShared = true)
-     * {
-     *     if ($getShared) {
-     *         return static::getSharedInstance('example');
-     *     }
-     *
-     *     return new \CodeIgniter\Example();
-     * }
+    /**
+     * Klien API Data Induk Siswa (induk.smkislam1blitar.sch.id).
+     * Key & base URL dibaca dari .env server (INDUK_API_KEY, INDUK_API_BASE).
      */
+    public static function induk($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('induk');
+        }
+
+        return new \App\Libraries\IndukClient();
+    }
 }

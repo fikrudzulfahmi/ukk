@@ -30,6 +30,10 @@ $routes->group('siswa', ['filter' => ['auth', 'admin']], function ($routes) {
     $routes->get('delete/(:num)', 'Siswa::delete/$1');
     $routes->post('import', 'Siswa::import');
     $routes->post('get_data', 'Siswa::get_data');
+    // Import dari Aplikasi Data Induk (induk.smkislam1blitar.sch.id)
+    $routes->get('induk/kelas', 'Siswa::induk_kelas');
+    $routes->post('induk/siswa', 'Siswa::induk_siswa_preview');
+    $routes->post('induk/import', 'Siswa::induk_import');
 });
 
 $routes->group('elemen', ['filter' => ['auth', 'admin']], function ($routes) {

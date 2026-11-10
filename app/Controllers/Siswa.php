@@ -148,6 +148,187 @@ class Siswa extends BaseController
         return redirect()->back()->with('error', 'Gagal mengupload file.');
     }
 
+    // ============================
+    // IMPORT DARI APLIKASI DATA INDUK
+    // ============================
+
+    /**
+     * Ambil daftar kelas dari API Induk (untuk dropdown modal import).
+     * GET /siswa/induk/kelas
+     */
+    public function induk_kelas()
+    {
+        $induk = \Config\Services::induk();
+
+        try {
+            $kelas = $induk->daftarKelas();
+        } catch (\RuntimeException $e) {
+            return $this->response->setStatusCode(502)->setJSON([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $kelas,
+        ]);
+    }
+
+    /**
+     * Ambil daftar siswa rombel/tingkat tertentu dari API Induk
+     * (preview sebelum import). POST /siswa/induk/siswa
+     * body: { kelas?, tingkat?, status? }
+     */
+    public function induk_siswa_preview()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403);
+        }
+
+        $kelas   = trim((string) $this->request->getPost('kelas'));
+        $tingkat = trim((string) $this->request->getPost('tingkat'));
+        $status  = trim((string) $this->request->getPost('status'));
+        $status  = in_array($status, ['aktif', 'nonaktif'], true) ? $status : 'aktif';
+
+        if ($kelas === '' && $tingkat === '') {
+            return $this->response->setStatusCode(422)->setJSON([
+                'status'  => 'error',
+                'message' => 'Pilih rombel (kelas) atau tingkat terlebih dahulu.',
+            ]);
+        }
+
+        $induk = \Config\Services::induk();
+        try {
+            if ($kelas !== '') {
+                $daftar = $induk->rombelSiswa($kelas, $status);
+            } else {
+                $daftar = $induk->tingkatSiswa($tingkat, $status);
+            }
+        } catch (\RuntimeException $e) {
+            return $this->response->setStatusCode(502)->setJSON([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        // Tandai yang sudah ada di DB (siswa event aktif) agar UI bisa memberi tahu "baru / sudah ada"
+        $id_event = session()->get('active_event_id');
+        $existing = $this->siswaModel->where('id_event', $id_event)
+            ->select('nisn')
+            ->get()
+            ->getResultArray();
+        $existingNisn = array_map(fn($r) => strtoupper((string) $r['nisn']), $existing);
+
+        $daftar = array_map(function ($row) use ($existingNisn) {
+            $row['sudah_ada'] = in_array(strtoupper((string) $row['nisn']), $existingNisn, true);
+            return $row;
+        }, $daftar);
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'filter' => ['kelas' => $kelas, 'tingkat' => $tingkat, 'status' => $status],
+            'jumlah' => count($daftar),
+            'data'   => $daftar,
+        ]);
+    }
+
+    /**
+     * Import daftar siswa dari API Induk ke DB (auto-skip yang NISN sudah ada).
+     * POST /siswa/induk/import
+     * body: { kelas?, tingkat?, status?, import }
+     */
+    public function induk_import()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403);
+        }
+
+        $id_event = session()->get('active_event_id');
+        if (!$id_event) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'status'  => 'error',
+                'message' => 'Event tidak aktif. Silakan aktifkan event di menu Event.',
+            ]);
+        }
+
+        $kelas   = trim((string) $this->request->getPost('kelas'));
+        $tingkat = trim((string) $this->request->getPost('tingkat'));
+        $status  = trim((string) $this->request->getPost('status'));
+        $status  = in_array($status, ['aktif', 'nonaktif'], true) ? $status : 'aktif';
+
+        if ($kelas === '' && $tingkat === '') {
+            return $this->response->setStatusCode(422)->setJSON([
+                'status'  => 'error',
+                'message' => 'Pilih rombel (kelas) atau tingkat terlebih dahulu.',
+            ]);
+        }
+
+        $induk = \Config\Services::induk();
+        try {
+            if ($kelas !== '') {
+                $daftar = $induk->rombelSiswa($kelas, $status);
+            } else {
+                $daftar = $induk->tingkatSiswa($tingkat, $status);
+            }
+        } catch (\RuntimeException $e) {
+            return $this->response->setStatusCode(502)->setJSON([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        // NISN yang sudah ada di event ini (skip duplikat)
+        $existing = $this->siswaModel->where('id_event', $id_event)
+            ->select('nisn')
+            ->get()
+            ->getResultArray();
+        $existingNisn = array_map(fn($r) => strtoupper((string) $r['nisn']), $existing);
+
+        $inserted = 0;
+        $skipped  = 0;
+        $gagal    = [];
+
+        foreach ($daftar as $row) {
+            $nisn = strtoupper((string) ($row['nisn'] ?? ''));
+            $nama = trim((string) ($row['nama'] ?? ''));
+            $kl   = trim((string) ($row['kelas'] ?? ($kelas !== '' ? $kelas : $tingkat)));
+
+            if ($nisn === '' || $nama === '') {
+                $gagal[] = 'baris tanpa NISN/nama';
+                continue;
+            }
+            if (in_array($nisn, $existingNisn, true)) {
+                $skipped++;
+                continue;
+            }
+            try {
+                $this->siswaModel->insert([
+                    'id_event'   => $id_event,
+                    'nisn'       => $nisn,
+                    'nama_siswa' => $nama,
+                    'kelas'      => $kl,
+                ]);
+                $existingNisn[] = $nisn; // hindari duplikat dalam list sama
+                $inserted++;
+            } catch (\Throwable $e) {
+                $gagal[] = $nisn . ' ' . $nama;
+            }
+        }
+
+        return $this->response->setJSON([
+            'status'      => 'success',
+            'source'      => $kelas !== '' ? ('rombel ' . $kelas) : ('tingkat ' . $tingkat),
+            'total'       => count($daftar),
+            'inserted'    => $inserted,
+            'skipped'     => $skipped,
+            'gagal'       => $gagal,
+            'message'     => $inserted . ' siswa ditambahkan' .
+                ($skipped > 0 ? ', ' . $skipped . ' dilewati (sudah ada)' : '') .
+                (count($gagal) > 0 ? ', ' . count($gagal) . ' gagal' : '') . '.',
+        ]);
+    }
+
     public function hasil_praktek()
     {
         $db = \Config\Database::connect();
