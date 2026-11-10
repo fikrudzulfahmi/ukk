@@ -83,7 +83,8 @@ class Filters extends BaseFilters
                     'auth/*',
                     '/',
                     'ujian/*', // Tambahkan ini untuk mengizinkan semua route ujian
-                    'nilai_teori/simpan_ajax' // Tambahkan ini jika simpan_ajax nilaimu ada di controller lain
+                    'nilai_teori/simpan_ajax', // Tambahkan ini jika simpan_ajax nilaimu ada di controller lain
+                    'debug_induk', // DEBUG SEMENTARA — hapus setelah diagnosis selesai
                 ]
             ]
         ],
